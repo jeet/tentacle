@@ -25,7 +25,7 @@ class Test::Unit::TestCase
     end
 end
 
-Warehouse.domain = 'test.host'
-Warehouse.permission_command = Warehouse.password_command = nil
+Tentacle.domain = 'test.host'
+Tentacle.permission_command = Tentacle.password_command = nil
 # makes model/controller tests explode
-#Warehouse::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
+#Tentacle::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)

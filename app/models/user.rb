@@ -1,43 +1,7 @@
 require 'digest/md5'
 class User < ActiveRecord::Base
-  include PermissionMethods  
   attr_accessor :avatar_data
-
-  has_many :permissions, :conditions => ['active = ?', true] do
-    def for_repository(repository)
-      find_all_by_repository_id(repository.id)
-    end
     
-    def paths_for(repository)
-      return :all if proxy_owner.admin? || repository.public?
-      paths = for_repository(repository).collect! &:clean_path
-      root_paths, all_paths = paths.partition(&:blank?)
-      root_paths.empty? ? all_paths : :all
-    end
-  end
-  
-  has_many :all_permissions, :class_name => 'Permission', :foreign_key => 'user_id', :dependent => :delete_all
-  has_many :repositories, :through => :permissions, :select => "repositories.*, #{Permission.join_fields}", :order => 'repositories.name, permissions.path' do
-    def paths
-      repo_paths = proxy_owner.repositories.inject({}) do |memo, repo|
-        if proxy_owner.admin?
-          memo.update repo.id => :all
-        else
-          (memo[repo.id] ||= []) << repo.permission_path
-          memo
-        end
-      end
-      return repo_paths if proxy_owner.admin?
-      repo_paths.each do |repo_id, paths|
-        repo_paths[repo_id] = :all if paths.include?(:all) || paths.include?('')
-      end
-      repo_paths
-    end
-  end
-  
-  has_many :administered_repositories, :through => :permissions, :source => :repository, :conditions => ['permissions.admin = ?', true],
-    :select => "repositories.*, #{Permission.join_fields}", :order => 'repositories.name, permissions.path'
-  
   attr_accessor :password
   validates_format_of       :email, :with => /(\A(\s*)\Z)|(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z)/i, :allow_nil => true
   validates_confirmation_of :password, :allow_nil => true
@@ -98,16 +62,16 @@ class User < ActiveRecord::Base
 
   def self.encrypt_password(user, password = nil)
     password ||= user.password
-    case Warehouse.authentication_scheme
+    case Tentacle.authentication_scheme
       when 'plain' then user.password
-      when 'md5'   then Digest::MD5::hexdigest([user.login, Warehouse.authentication_realm, password].join(":"))
+      when 'md5'   then Digest::MD5::hexdigest([user.login, Tentacle.authentication_realm, password].join(":"))
       when 'basic' then password.crypt(TokenGenerator.generate_simple(2))
     end
   end
   
   def self.password_matches?(user, password)
     user.crypted_password == 
-      case Warehouse.authentication_scheme
+      case Tentacle.authentication_scheme
         when 'plain' then password
         when 'md5'   then user.encrypt_password(password)
         when 'basic' then password.crypt(user.crypted_password[0,2])

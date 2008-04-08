@@ -5,11 +5,11 @@ context "Lighthouse" do
   setup do
     @repo   = {:id => 1, :subdomain => 'foo'}
     @commit = stub(:revision => 5, :changed => ['M foo', 'A foo/bar'].join("\n"), :author => 'rick', :log => 'add bar', :changed_at => Time.utc(2007, 1, 1), :repo => @repo)
-    @hook   = Warehouse::Hooks::Lighthouse.new(@commit)
+    @hook   = Tentacle::Hooks::Lighthouse.new(@commit)
   end
   
   specify "should keep option order" do
-    Warehouse::Hooks::Lighthouse.option_order.collect { |order| order.split.first }.should == %w(prefix account project token users)
+    Tentacle::Hooks::Lighthouse.option_order.collect { |order| order.split.first }.should == %w(prefix account project token users)
   end
   
   specify "should gather commit changes" do
@@ -17,17 +17,17 @@ context "Lighthouse" do
   end
   
   specify "should get use default token if no user token is available" do
-    hook = Warehouse::Hooks::Lighthouse.new(@commit, :token => 'test')
+    hook = Tentacle::Hooks::Lighthouse.new(@commit, :token => 'test')
     hook.current_token.should == 'test'
   end
   
   specify "should get use user token if available" do
-    hook = Warehouse::Hooks::Lighthouse.new(@commit, :token => 'test', :users => 'rick foo')
+    hook = Tentacle::Hooks::Lighthouse.new(@commit, :token => 'test', :users => 'rick foo')
     hook.current_token.should == 'foo'
   end
   
   specify "should construct url from options" do
-    hook = Warehouse::Hooks::Lighthouse.new(@commit, :token => 'test', :project => '1')
+    hook = Tentacle::Hooks::Lighthouse.new(@commit, :token => 'test', :project => '1')
     hook.changeset_url.path.should == "/projects/1/changesets.xml"
   end
   

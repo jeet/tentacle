@@ -1,4 +1,4 @@
-class PhotoGalleryController < Warehouse::PluginController
+class PhotoGalleryController < Tentacle::PluginController
   plugin :photo_gallery
   before_filter :repository_member_required
 

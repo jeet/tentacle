@@ -1,6 +1,6 @@
 $LOAD_PATH << File.join(File.dirname(__FILE__), 'vendor/tinder/lib')
 
-Warehouse::Hooks.define :campfire do
+Tentacle::Hooks.define :campfire do
   title "Campfire"
   author "activereload"
   version "1.0"

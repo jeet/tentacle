@@ -1,18 +1,12 @@
 class ApplicationController < ActionController::Base
   helper :all # include all helpers, all the time
-  helper_method :current_repository, :logged_in?, :current_user, :admin?, :controller_path, :repository_admin?, :repository_member?, :repository_subdomain, :hosted_url, :hosted_url_for
+  helper_method :logged_in?, :current_user, :admin?, :controller_path, :hosted_url, :hosted_url_for
   
-  session(Warehouse.session_options) unless Warehouse.domain.blank?
+  session(Tentacle.session_options) unless Tentacle.domain.blank?
   
   around_filter :set_context
   
-  before_filter :check_for_valid_domain
-  before_filter :check_for_repository
-
   expiring_attr_reader :current_user,       :retrieve_current_user
-  expiring_attr_reader :repository_member?, :retrieve_repository_member
-  expiring_attr_reader :repository_admin?,  :retrieve_repository_admin
-  expiring_attr_reader :current_repository, :retrieve_current_repository
   expiring_attr_reader :admin?,             :retrieve_admin
 
   def logged_in?
@@ -24,16 +18,7 @@ class ApplicationController < ActionController::Base
   end
   
   protected
-    def repository_member_required
-      repository_member? || access_denied_message("You must be a member of this repository to visit this page.")
-    end
-    
-    # specifies a controller action where a repository admin is required.
-    def repository_admin_required
-      repository_admin? || access_denied_message("You must be an administrator for this repository to visit this page.")
-    end
-    
-    # specifies a controller action that only warehouse administrators are allowed
+    # specifies a controller action that only tentacle administrators are allowed
     def admin_required
       admin? || access_denied_message("You must be an administrator to visit this page.")
     end
@@ -54,7 +39,7 @@ class ApplicationController < ActionController::Base
     # handles non-html responses in PRODUCTION mode when there are exceptions
     def rescue_action_in_public(exception)
       if api_format?
-        render :text => "An error has occurred with Warehouse.  Check your #{RAILS_ENV} logs.", :status => :internal_server_error
+        render :text => "An error has occurred with Tentacle.  Check your #{RAILS_ENV} logs.", :status => :internal_server_error
       else
         super
       end
@@ -85,22 +70,7 @@ class ApplicationController < ActionController::Base
       return nil if @node.nil?
       @node.dir? ? @node.path : File.dirname(@node.path)
     end
-    
-    def retrieve_repository_member
-      return true if admin?
-      return nil unless current_repository
-      return true if current_repository.public?
-      return nil unless logged_in?
-      current_repository.member?(current_user, node_directory_path)
-    end
-    
-    def retrieve_repository_admin
-      return true if admin?
-      return nil unless current_repository
-      return nil unless current_repository.public? || logged_in?
-      current_repository.admin?(current_user)
-    end
-    
+        
     def current_user=(value)
       session[:user_id] = value ? value.id : nil
       @current_user     = value
@@ -113,35 +83,13 @@ class ApplicationController < ActionController::Base
         (session[:user_id] && User.find_by_id(session[:user_id]))
     end
     
-    def retrieve_current_repository
-      repository_subdomain.blank? ? nil : Repository.find_by_subdomain(repository_subdomain)
-    end
-    
     def installed?
-      !Warehouse.domain.blank? && Repository.count > 0
+      !Tentacle.domain.blank? && Repository.count > 0
     end
     
     def install
       reset_session
       redirect_to installer_path
-    end
-  
-    def check_for_repository
-      return true if current_repository
-      if installed?
-        redirect_to(logged_in? ? root_changesets_path : root_public_changesets_path)
-      else
-        install
-      end
-      false
-    end
-    
-    def check_for_valid_domain
-      if (Warehouse.domain.blank? && Repository.count > 0) || (!Warehouse.domain.blank? && request.host != Warehouse.domain && request.host.gsub(/^[\w-]+\./, '') != Warehouse.domain)
-        status_message :error, "Invalid domain '#{request.host}'.", 'shared/domain'
-      else
-        true
-      end
     end
 
   if USE_REPO_PATHS
@@ -165,10 +113,6 @@ class ApplicationController < ActionController::Base
       end
     end
   else
-    def repository_subdomain
-      request.host.gsub %r(\.?#{Regexp.escape(Warehouse.domain)}), ''
-    end
-
     def hosted_url(*args)
       repository, name = extract_repository_and_args(args)
       if repository.nil?
@@ -176,7 +120,7 @@ class ApplicationController < ActionController::Base
       else
         "http%s://%s%s%s" % [
           ('s' if request.ssl?),
-          (repository ? repository.domain : Warehouse.domain),
+          (repository ? repository.domain : Tentacle.domain),
           (':' + request.port.to_s unless request.port == request.standard_port),
           send("#{name}_path", *args)
           ]

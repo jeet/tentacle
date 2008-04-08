@@ -3,13 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
   	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title><%= current_repository.name rescue 'Warehouse: ' %> <%= @title rescue '' %></title>
+    <title>Tentacle: <%= @title rescue '' %></title>
     <link rel="shortcut icon" href="/favicon.png" type="image/png" />
     <%= stylesheet_link_tag 'main' %>
     <%= stylesheet_link_tag 'code' %>
-    <%= stylesheet_link_tag "uv/#{Warehouse.source_highlight_theme}" %>
+    <%= stylesheet_link_tag "uv/#{Tentacle.source_highlight_theme}" %>
     
-    <%= javascript_include_tag 'prototype', 'lowpro-lite', 'moo.fx.js', 'moo.fx.transitions.js', 'application', :cache => 'warehouse' %>
+    <%= javascript_include_tag 'prototype', 'lowpro-lite', 'moo.fx.js', 'moo.fx.transitions.js', 'application', :cache => 'tentacle' %>
     
     <%= yield :scripts %>
     <script type="text/javascript" charset="utf-8">
@@ -27,9 +27,7 @@
         <%= yield :onready %>
       });
       <%= yield :javascript %>
-			<% if USE_REPO_PATHS && current_repository -%>Warehouse.root = '/<%= current_repository.subdomain %>';<% end -%>
     </script>
-    <%= auto_discovery_link_tag(:atom, changeset_feed_url) %>
     <!--[if lt IE 8]>
       <%= stylesheet_link_tag 'curbstomp' %>
     <![endif]-->
@@ -61,13 +59,9 @@
       <!-- header -->
       <div id="header">
         <div id="hdr-cnt">
-          <h1><%= link_to current_repository ? current_repository.name : "Warehouse", root_path %></h1>
+          <h1><%= link_to "Tentacle", root_path %></h1>
           <ul id="nav">
-            <% unless repository_subdomain.blank? -%>
-            <li id="code"<%= selected_navigation?(:browser) %>><%= link_to 'Browser', hosted_url(:browser) %></li>
-            <% end -%>
-            <li id="activity"<%= selected_navigation?(:activity) %>><%= link_to 'Activity', activity_url %></li>
-            <% if admin? || repository_admin? %>
+            <% if admin? %>
             <li id="admin"<%= selected_navigation?(:admin) %>><%= link_to 'Admin', hosted_url(:admin) %></li>
             <% end %>
           </ul>
@@ -107,48 +101,12 @@
         <!-- main -->
         <div id="main"<% if @fullscreen -%> style="width:100%"<% end -%>>
           <%= yield %>
-          
-          <% if full_svn_url? -%>
-          <div id="svn-url">
-            <p>Check out the code: <code>svn co <%= full_svn_url %></code></p>
-          </div>
-          <% end -%>
         </div>
         <!-- /main -->
         <% unless @fullscreen -%>
         <!-- sbar -->
         <div id="sbar">
-          <div id="search" class="sideblock">
-            <% form_tag current_repository ? hosted_url(:changesets) : root_changesets_path, :method => :get do -%>
-                <%= text_field_tag :q, params[:q], :size => 13, :id => 'search-box' %>
-                <input type="image" src="/images/app/btns/search.png" alt="Search" id="search-btn" />
-            <% end -%>
-          </div>
-          <%= link_to 'Subscribe to History', hosted_url(:history, :paths => (params[:paths] << 'changesets.atom')), :id => 'subscribe-history' if controller.controller_name == 'history' %>
-          
-          <%= link_to 'Subscribe to Changesets', changeset_feed_url, :id => 'subscribe-btn' %>
-
           <%= yield :sidebar %>
-          
-          <% if Warehouse::Plugins.tabs? -%>
-            <div class="sideblock" id="plugins">
-              <h3>Plugins</h3>
-              <ul>
-              <% Warehouse::Plugins.each_tab do |tab| -%>
-                <li><%= link_to_tab *tab %></li>
-              <% end -%>
-              </ul>
-            </div>
-          <% end -%>
-            
-          <% cache CacheKey.bookmarks_for(current_repository) do -%>
-          <div id="bookmarks" class="sideblock"<%= %( style="display:none") if current_repository.bookmarks.to_a.empty? %>>
-            <h3>Bookmarks</h3>
-            <ul id="bookmark-list">
-              <%= render :partial => "bookmarks/bookmark", :collection => current_repository.bookmarks %>
-            </ul>
-          </div>
-          <% end if current_repository && (current_repository.public? || repository_member?) -%>
         </div>
         <!-- /sbar -->
         <% end -%>

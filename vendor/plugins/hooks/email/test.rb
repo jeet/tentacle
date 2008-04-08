@@ -6,7 +6,7 @@ context "Email" do
     @repo    = {:id => 1, :subdomain => 'foo'}
     @commit  = stub(:revision => 5, :changed => ['M foo', 'A foo/bar'].join("\n"), :author => 'rick', :log => "add bar\n * one\n * two", :changed_at => Time.utc(2007, 1, 1), :repo => @repo)
     @options = {}
-    @hook    = Warehouse::Hooks::Email.new(@commit, @options)
+    @hook    = Tentacle::Hooks::Email.new(@commit, @options)
   end
   
   it "should split first commit line" do

@@ -1,7 +1,7 @@
 require 'cgi'
 require 'net/http'
 
-Warehouse::Hooks.define :lighthouse do
+Tentacle::Hooks.define :lighthouse do
   # Some common plugin properties
   title    'Lighthouse Beacon'
   author   'Active Reload LLC.'

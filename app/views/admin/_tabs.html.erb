@@ -1,12 +1,6 @@
 <ul id="admin-nav" class="clearfix">
-  <li id="nrepo"<%= class_for(hosted_url(:admin)) %>><%= link_to 'Repos', hosted_url(:admin) %></li>
-  <li id="naccess"<%= class_for(hosted_url(:permissions)) %>><%= link_to 'Access', hosted_url(:permissions) %></li>
   <% if admin? -%>
   <li id="nmembers"<%= class_for(hosted_url(:users)) %>><%= link_to 'Members', hosted_url(:users) %></li>
-  <% if current_repository -%>
-  <li id="nhooks"<%= class_for(hosted_url(:hooks)) %>><%= link_to 'Hooks', hosted_url(:hooks) %></li>
-  <% end -%>
-  <li id="nplugin"<%= class_for(hosted_url(:plugins)) %>><%= link_to 'Plugins', hosted_url(:plugins) %></li>
   <li id="nsettings"<%= class_for(hosted_url(:settings)) %>><%= link_to 'Settings', hosted_url(:settings) %></li>
   <% end -%>
 </ul>

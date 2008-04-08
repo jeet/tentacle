@@ -77,8 +77,8 @@
 * add more svn/ruby requires (for compatibility w/ svn 1.3)
 * fix old @error usage
 * freeze open id gems
-* initialize Warehouse.domain to an empty string
-* show extra debug info for invalid Warehouse.domain
+* initialize Tentacle.domain to an empty string
+* show extra debug info for invalid Tentacle.domain
 * remove email footer
 * require email and svn login at least, unless the account was created with open id.
 * fix bugs relating to giving members access to the root of a repo

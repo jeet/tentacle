@@ -3,25 +3,25 @@ class UserMailer < ActionMailer::Base
 
   def invitation(creator, user)
     setup_user(user)
-    @subject        = "New Warehouse account for #{Warehouse.domain}"
+    @subject        = "New Tentacle account for #{Tentacle.domain}"
     @body[:creator] = creator
   end
 
   def forgot_password(user)
     setup_user(user)
-    @subject    = "[Warehouse] Request to change your password."
+    @subject    = "[Tentacle] Request to change your password."
   end
 
   protected
     def setup_user(user)
       @recipients  = "#{user.email}"
       @body[:user] = user
-      @body[:url]  = reset_url(:token => user.token, :host => Warehouse.domain)
+      @body[:url]  = reset_url(:token => user.token, :host => Tentacle.domain)
       setup_email
     end
     
     def setup_email
-      @from        = "#{Warehouse.mail_from}"
+      @from        = "#{Tentacle.mail_from}"
       @sent_on     = Time.now
     end
 end

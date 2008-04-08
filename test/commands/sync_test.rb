@@ -1,14 +1,14 @@
 require File.dirname(__FILE__) + '/../test_helper'
-Warehouse::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
+Tentacle::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
 
-Warehouse::Syncer::SvnSyncer.send :attr_writer, :num
-Warehouse::Syncer::SvnSyncer.send :public, :num=
+Tentacle::Syncer::SvnSyncer.send :attr_writer, :num
+Tentacle::Syncer::SvnSyncer.send :public, :num=
 
 context "Command Syncing" do
   setup do
     @node       = stub(:text? => true, :revision => 5)
     @silo       = stub(:fs => stub, :latest_revision => 50, :node_at => @node)
-    @command    = Warehouse::Command.new
+    @command    = Tentacle::Command.new
     @changes    = []
     @connection = {:changes => @changes}
     @command.stubs(:connection).returns(@connection)
@@ -16,7 +16,7 @@ context "Command Syncing" do
     @changeset = {:id => 7, :revision => 5, :repository_id => @repo[:id], :author => 'rick', :message => 'brb going to moon', :changed_at => (Time.now - 300).utc}
     @user = {:id => 6, :login => 'justin'}
     @command.stubs(:silo_for).with(@repo).returns(@silo)
-    @syncer = Warehouse::Syncer::SvnSyncer.new(@command.connection, @repo, @silo, 1)
+    @syncer = Tentacle::Syncer::SvnSyncer.new(@command.connection, @repo, @silo, 1)
   end
 
   specify "should sync revisions" do
@@ -27,7 +27,7 @@ context "Command Syncing" do
     @connection.expects(:transaction).yields
     @syncer.expects(:create_changeset).with(@changeset[:revision]).returns(@changeset)
     @syncer.expects(:update_user_activity).with({:id => @user[:id], :login => @changeset[:author]}, @changeset[:changed_at])
-    Warehouse::Syncer::SvnSyncer.expects(:new).with(@connection, @repo, @silo, 1).returns(@syncer)
+    Tentacle::Syncer::SvnSyncer.expects(:new).with(@connection, @repo, @silo, 1).returns(@syncer)
     @command.send(:sync_revisions_for, @repo, 1)
     @repo[:changesets_count].should == 1
   end
@@ -38,7 +38,7 @@ context "Command Syncing" do
     @connection.update :changesets => stub(:where => stub(:order => changesets))
     @command.connection.expects(:transaction)
     @syncer.expects(:create_changeset).times(0)
-    Warehouse::Syncer::SvnSyncer.expects(:new).with(@connection, @repo, @silo, 1).returns(@syncer)
+    Tentacle::Syncer::SvnSyncer.expects(:new).with(@connection, @repo, @silo, 1).returns(@syncer)
     @command.sync_revisions_for(@repo, 1)
   end
 
@@ -116,7 +116,7 @@ end
 context "Command Clearing" do
   setup do
     @silo = stub(:fs => stub) 
-    @command = Warehouse::Command.new
+    @command = Tentacle::Command.new
   end
   specify "should fail early for bad repo subdomain" do
   end

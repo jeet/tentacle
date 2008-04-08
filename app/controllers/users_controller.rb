@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  skip_before_filter :check_for_repository
   before_filter :login_required, :only   => :update
   before_filter :admin_required, :except => :update
   before_filter :strip_admin_value
@@ -15,7 +14,6 @@ class UsersController < ApplicationController
     render :update do |page|
       if @user.save
         UserMailer.deliver_invitation(current_user, @user)
-        Repository.rebuild_htpasswd_for(@user)
         page.redirect_to hosted_url(:users)
       else
         page["error-#{dom_id @user}"].show.replace_html(error_messages_for(:user))
@@ -36,7 +34,6 @@ class UsersController < ApplicationController
     @user.admin = @is_admin if admin? && params[:id] && params[:user]
     @user.save
     CacheKey.sweep_cache
-    Repository.rebuild_htpasswd_for(@user)
     redirect_to(params[:to] || root_path)
   end
   
@@ -44,7 +41,6 @@ class UsersController < ApplicationController
     @user = User.find params[:id]
     @user.destroy
     CacheKey.sweep_cache
-    Repository.rebuild_htpasswd_for(@user)
     respond_to do |format|
       format.js
     end

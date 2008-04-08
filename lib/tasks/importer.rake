@@ -21,7 +21,7 @@ module Kernel
   end
 end
 
-namespace :warehouse do
+namespace :tentacle do
   task :init do
     require 'set'
     require 'logger'
@@ -29,18 +29,18 @@ namespace :warehouse do
     require 'lib/cache_key'
     $LOAD_PATH << 'vendor/ruby-sequel/lib' << 'vendor/metaid-1.0' << 'vendor/mailfactory-1.2.3/lib' << 'vendor/silo/lib'
     require 'silo'
-    require 'lib/warehouse'
-    require 'config/initializers/warehouse'
-    require 'lib/warehouse/svn_access_builder'
-    require 'lib/warehouse/mailer'
-    require 'lib/warehouse/command'
-    require 'lib/warehouse/syncer/base'
-    require 'lib/warehouse/syncer/svn_syncer'
-    require 'lib/warehouse/syncer/git_syncer'
-    require 'lib/warehouse/extension'
-    require 'lib/warehouse/hooks'
-    require 'lib/warehouse/hooks/base'
-    require 'lib/warehouse/hooks/commit'
+    require 'lib/tentacle'
+    require 'config/initializers/tentacle'
+    require 'lib/tentacle/svn_access_builder'
+    require 'lib/tentacle/mailer'
+    require 'lib/tentacle/command'
+    require 'lib/tentacle/syncer/base'
+    require 'lib/tentacle/syncer/svn_syncer'
+    require 'lib/tentacle/syncer/git_syncer'
+    require 'lib/tentacle/extension'
+    require 'lib/tentacle/hooks'
+    require 'lib/tentacle/hooks/base'
+    require 'lib/tentacle/hooks/commit'
     ENV['DB_CONFIG'] ||= "config/database.yml"
     raise "No database config at #{ENV['DB_CONFIG'].inspect}" unless File.exist?(ENV['DB_CONFIG'])
     config = {}
@@ -51,9 +51,9 @@ namespace :warehouse do
       config[k.to_sym] = v
     end
     @num  = (ENV['NUM'] || ENV['N']).to_i
-    Warehouse::Command.logger ||= Logger.new(ENV['LOGGER'] || STDOUT) unless ENV['LOGGER'] == 'none'
-    Warehouse::Command.logger.level = Logger.const_get((ENV['LOG_LEVEL'] || 'INFO').upcase) if Warehouse::Command.logger
-    @command = Warehouse::Command.new(config)
+    Tentacle::Command.logger ||= Logger.new(ENV['LOGGER'] || STDOUT) unless ENV['LOGGER'] == 'none'
+    Tentacle::Command.logger.level = Logger.const_get((ENV['LOG_LEVEL'] || 'INFO').upcase) if Tentacle::Command.logger
+    @command = Tentacle::Command.new(config)
     begin
       require 'ruby-debug'
       Debugger.start
@@ -63,8 +63,8 @@ namespace :warehouse do
 
   task :post_commit do
     ENV['REPO'] ||= ENV['REPO_PATH'].split('/').last if ENV['REPO_PATH']
-    Rake::Task['warehouse:sync'].invoke
-    Warehouse::Hooks.discover
+    Rake::Task['tentacle:sync'].invoke
+    Tentacle::Hooks.discover
     @command.process_hooks_for(ENV['REPO'], ENV['REPO_PATH'], ENV['REVISION'] || ENV['CHANGESET'])
   end
   
@@ -96,8 +96,8 @@ namespace :warehouse do
   end
   
   task :build_config => :init do
-    require 'lib/warehouse'
-    require 'config/initializers/warehouse'
+    require 'lib/tentacle'
+    require 'config/initializers/tentacle'
     config_path = ENV['CONFIG'] || 'config/access.conf'
     
     @command.build_config_for ENV['REPO'], config_path

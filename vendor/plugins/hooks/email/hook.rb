@@ -1,6 +1,6 @@
 require 'cgi'
 
-Warehouse::Hooks.define :email do
+Tentacle::Hooks.define :email do
   # Some common plugin properties
   title    'Mailer'
   author   'activereload'
@@ -70,7 +70,7 @@ Warehouse::Hooks.define :email do
   end
   
   run do
-    msg = Warehouse::Mailer.new :to => options[:recipients], :from => options[:sender], :subject => subject, :html => body
+    msg = Tentacle::Mailer.new :to => options[:recipients], :from => options[:sender], :subject => subject, :html => body
     msg.deliver!
   end
 end

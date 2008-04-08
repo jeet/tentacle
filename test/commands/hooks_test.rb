@@ -4,7 +4,7 @@ context "Post Commit Hooks" do
   fixtures :repositories, :hooks
 
   setup do
-    @command = Warehouse::Command.new
+    @command = Tentacle::Command.new
   end
 
   specify "should be filtered by repository" do
@@ -19,9 +19,9 @@ context "Post Commit Hooks" do
       [{:name => 'foo', :options => options[0].to_yaml}, 
        {:name => 'foo', :options => options[1].to_yaml}]
     indexed.size.should == 2
-    indexed[0][0].should == Warehouse::Hooks::Foo
+    indexed[0][0].should == Tentacle::Hooks::Foo
     indexed[0][1].should == options[0]
-    indexed[1][0].should == Warehouse::Hooks::Foo
+    indexed[1][0].should == Tentacle::Hooks::Foo
     indexed[1][1].should == options[1]
   end
 end

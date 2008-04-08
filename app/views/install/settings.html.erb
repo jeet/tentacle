@@ -5,85 +5,18 @@
 <% end -%>
 
 <div id="commands">
-  <p style="font-weight:bold">
-    <a href="http://warehouseapp.com/faqs/what-are-these-admin-settings-for">View help docs &raquo;</a>
-  </p>
 <% form_tag settings_path do -%>
-  <p class="command">
-    <label for="settings_permission_command">
-      Shell command to run when permissions are updated
-      <span class="help">When permissions are updated, this shell command is executed.</span>
-    </label>
-    <%= text_field_tag :settings_permission_command, params[:settings][:permission_command] || Warehouse.permission_command, 
-      :size => 40, :name => 'settings[permission_command]' %>
-  </p>
-  <p class="command">
-    <label for="settings_password_command">
-      Shell command to run when someone's password is updated.
-      <span class="help">When you update a persons password, this command is executed. (e.g. rake warehouse:build_htpasswd CONFIG=config/htpasswd.conf)</span>
-    </label>
-    <%= text_field_tag :settings_password_command, params[:settings][:password_command] || Warehouse.password_command, 
-      :size => 40, :name => 'settings[password_command]' %>
-  </p>
-  
-  <p class="command">
-    <label for="settings_mail_from">
-      Email address that email notifications are sent from.
-      <span class="help">Reply to/From address used when adding new members.</span>
-    </label>
-    <%= text_field_tag :settings_mail_from, params[:settings][:mail_from] || Warehouse.mail_from, 
-      :size => 40, :name => 'settings[mail_from]' %>
-  </p>
-  
-  <% if false %>
-  i haven't figured this out yet.  damn you threads
-  <p class="command">
-    <label>
-      <%= check_box_tag :settings_syncing, params[:settings][:syncing] || Warehouse.sync? %>
-      Sync changesets automatically 
-      <span class="help">Leave unchecked and setup a post-commit hook in Subversion to make Warehouse faster</span>
-    </label>
-  </p>
-  <% end -%>
-  
-  <p class="command">
-    <a id="as-toggle" href="#advanced-settings">More settings...</a>
-  </p>
-  
-  <div id="advanced-settings" style="display:none">
-	<% if Object.const_defined?(:Uv) -%>
-	<p class="command">
-		<label for="settings_source_highlight_theme">Source code highlight theme</label>
-		<%= select_tag :settings_source_highlight_theme, 
-					options_for_select(Warehouse.source_highlight_themes, 
-					(params[:settings][:source_highlight_theme] || Warehouse.source_highlight_theme).to_s),
-					:name => 'settings[source_highlight_theme]' %>
-	</p>
-	<% end -%>
-  <p class="command">
-    <label><%= check_box_tag :settings_caching, 'fs', (params[:settings][:caching] || Warehouse.caching) == 'fs', 
-        :name => 'settings[caching]' %> Use filesystem cache</label>
-    <span class="help">Caches common pages to the filesystem for speed.  Cached files are located in <span style="color:#456"><%= File.join(RAILS_ROOT, 'tmp', 'cache') %></span>
-  </p>
-  <p class="command">
-    <label for="settings_svnlook_path">
-      System path to svnlook
-    </label>
-    <%= text_field_tag :settings_svnlook_path, params[:settings][:svnlook_path] || Warehouse.svnlook_path, 
-      :size => 40, :name => 'settings[svnlook_path]' %>
-  </p>
-
   <fieldset>
     <legend>Password Settings</legend>
     <p>This setting determines how the passwords are stored in the database, and how they are written to the svn password file.  Changing this setting will require all users to reset their passwords.</p>
     <p>
       <label for="settings_authentication_scheme">Authentication Scheme</label>
-      <%= select_tag :settings_authentication_scheme, options_for_select(%w(basic md5 plain), Warehouse.authentication_scheme),
+      <%= select_tag :settings_authentication_scheme, options_for_select(%w(basic md5 plain), Tentacle.authentication_scheme),
            :name => 'settings[authentication_scheme]' %>
     </p>
     <p>
       <label for="settings_authentication_realm">Authentication Realm</label>
-      <%= text_field_tag :settings_authentication_realm, params[:settings][:authentication_realm] || Warehouse.authentication_realm,
+      <%= text_field_tag :settings_authentication_realm, params[:settings][:authentication_realm] || Tentacle.authentication_realm,
             :size => 40, :name => 'settings[authentication_realm]' %>
     </p>
   </fieldset>
@@ -91,58 +24,57 @@
   <p class="command">
     <label for="settings_mail_type">Mail Server Type</label>
     <select name="settings[mail_type]" id="settings-mail-type" style="width:200px">
-      <%= options_for_select([%w(SMTP smtp), 'sendmail'], params[:settings][:mail_type] || Warehouse.mail_type) %>
+      <%= options_for_select([%w(SMTP smtp), 'sendmail'], params[:settings][:mail_type] || Tentacle.mail_type) %>
     </select>
   </p>
   
-  <fieldset id="mail-smtp"<%= %( style="display:none") if (params[:settings][:mail_type] || Warehouse.mail_type) == 'sendmail' %>>
+  <fieldset id="mail-smtp"<%= %( style="display:none") if (params[:settings][:mail_type] || Tentacle.mail_type) == 'sendmail' %>>
     <legend>SMTP Mail Settings</legend>
     <p>
       <label for="settings_mail_address">Address</label>
-      <%= text_field_tag :settings_mail_address, params[:settings][:smtp_settings][:address] || Warehouse.smtp_settings[:address] || :localhost, 
+      <%= text_field_tag :settings_mail_address, params[:settings][:smtp_settings][:address] || Tentacle.smtp_settings[:address] || :localhost, 
         :size => 40, :name => 'settings[smtp_settings][address]' %>
     </p>
     <p>
       <label for="settings_mail_port">Port</label>
-      <%= text_field_tag :settings_mail_port, params[:settings][:smtp_settings][:port] || Warehouse.smtp_settings[:port] || 25, 
+      <%= text_field_tag :settings_mail_port, params[:settings][:smtp_settings][:port] || Tentacle.smtp_settings[:port] || 25, 
         :size => 40, :name => 'settings[smtp_settings][port]' %>
     </p>
     <p>
       <label for="settings_mail_domain">Domain</label>
-      <%= text_field_tag :settings_mail_domain, params[:settings][:smtp_settings][:domain] || Warehouse.smtp_settings[:domain], 
+      <%= text_field_tag :settings_mail_domain, params[:settings][:smtp_settings][:domain] || Tentacle.smtp_settings[:domain], 
         :size => 40, :name => 'settings[smtp_settings][domain]' %>
     </p>
     <p>
       <label for="settings_mail_user_name">User Name</label>
-      <%= text_field_tag :settings_mail_user_name, params[:settings][:smtp_settings][:user_name] || Warehouse.smtp_settings[:user_name], 
+      <%= text_field_tag :settings_mail_user_name, params[:settings][:smtp_settings][:user_name] || Tentacle.smtp_settings[:user_name], 
         :size => 40, :name => 'settings[smtp_settings][user_name]' %>
     </p>
     <p>
       <label for="settings_mail_password">Password</label>
-      <%= password_field_tag :settings_mail_password, params[:settings][:smtp_settings][:password] || Warehouse.smtp_settings[:password], 
+      <%= password_field_tag :settings_mail_password, params[:settings][:smtp_settings][:password] || Tentacle.smtp_settings[:password], 
         :size => 40, :name => 'settings[smtp_settings][password]' %>
     </p>
     <p>
       <label for="settings_mail_authentication">Authentication</label>
-      <%= text_field_tag :settings_mail_authentication, params[:settings][:smtp_settings][:authentication] || Warehouse.smtp_settings[:authentication] || :plain, 
+      <%= text_field_tag :settings_mail_authentication, params[:settings][:smtp_settings][:authentication] || Tentacle.smtp_settings[:authentication] || :plain, 
         :size => 40, :name => 'settings[smtp_settings][authentication]' %>
     </p>
   </fieldset>
 
-  <fieldset id="mail-sendmail"<%= %( style="display:none") if (params[:settings][:mail_type] || Warehouse.mail_type) != 'sendmail' %>>
+  <fieldset id="mail-sendmail"<%= %( style="display:none") if (params[:settings][:mail_type] || Tentacle.mail_type) != 'sendmail' %>>
     <legend>Sendmail Settings</legend>
     <p>
       <label for="settings_mail_location">Location</label>
-      <%= text_field_tag :settings_mail_location, params[:settings][:sendmail_settings][:location] || Warehouse.sendmail_settings[:location] || '/usr/sbin/sendmail', 
+      <%= text_field_tag :settings_mail_location, params[:settings][:sendmail_settings][:location] || Tentacle.sendmail_settings[:location] || '/usr/sbin/sendmail', 
         :size => 40, :name => 'settings[sendmail_settings][location]' %>
     </p>
     <p>
       <label for="settings_mail_arguments">Command Arguments</label>
-      <%= text_field_tag :settings_mail_arguments, params[:settings][:sendmail_settings][:arguments] || Warehouse.sendmail_settings[:arguments], 
+      <%= text_field_tag :settings_mail_arguments, params[:settings][:sendmail_settings][:arguments] || Tentacle.sendmail_settings[:arguments], 
         :size => 40, :name => 'settings[sendmail_settings][arguments]' %>
     </p>
   </fieldset>
-  </div>
   <p class="btns"><%= submit_image 'save.png' %></p>
 <% end -%>
 </div>

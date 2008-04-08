@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../test_helper'
-Warehouse::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
+Tentacle::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
 
 context "Command DB Access" do
   setup do
-    @command = Warehouse::Command.new
+    @command = Tentacle::Command.new
   end
 
   specify "should find users for repository" do

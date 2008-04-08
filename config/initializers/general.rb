@@ -49,45 +49,10 @@ end
 
 require 'open3'
 require 'application'
-require 'warehouse'
-require 'warehouse/plugins'
-require 'warehouse/hooks'
-require 'plugin'
-require 'hook'
-
-begin
-  Warehouse::Hooks.discover
-rescue ActiveRecord::StatementInvalid
-  puts "!! Error loading hooks: #{$!}"
-  puts "!! Make sure the database was created successfully and migrated."
-end
-
-begin
-  Warehouse::Plugins.load
-rescue ActiveRecord::StatementInvalid
-  puts "!! Error loading plugins: #{$!}"
-  puts "!! Make sure the database was created successfully and migrated."
-end
+require 'tentacle'
 
 if RAILS_ENV == 'development'
   ENV["RAILS_ASSET_ID"] = ''
 end
 
-if USE_REPO_PATHS
-  class ActionController::Routing::RouteSet
-    def recognize_path_with_repo(path, environment = {})
-      repo = nil
-      if path !~ REPO_ROOT_REGEX && path =~ /^\/([^\/]+)/
-        path.gsub! /^\/([^\/]+)/ do |match|
-          repo = match[1..-1] ; nil
-        end
-      end
-      returning recognize_path_without_repo(path, environment) do |params|
-        params[:repo] = repo if repo
-      end
-    end
-    
-    alias_method_chain :recognize_path, :repo
-  end
-end
 

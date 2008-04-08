@@ -1,13 +1,13 @@
-namespace :warehouse do
-  desc "Upgrades Warehouse if it uses the recommended file/directory structure (see warehouse:setup).  Run from inside the release directory."
+namespace :tentacle do
+  desc "Upgrades Tentacle if it uses the recommended file/directory structure (see tentacle:setup).  Run from inside the release directory."
   task :upgrade => :check_structure do
     unless @in_structure || ENV['WAREHOUSE_FORCE']
-      say "Warehouse is not setup to upgrade."
-      say "Try running 'rake warehouse:setup'"
+      say "Tentacle is not setup to upgrade."
+      say "Try running 'rake tentacle:setup'"
       return
     end
     
-    rel_path = "releases/warehouse-#{Warehouse.version}"
+    rel_path = "releases/tentacle-#{Tentacle.version}"
 
     Dir.chdir '../..'
     Dir['shared/**/**'].each do |file|
@@ -21,12 +21,12 @@ namespace :warehouse do
     Dir.chdir rel_path
     
     unless ENV['WAREHOUSE_FORCE']
-      say "Upgraded to v#{Warehouse.version}"
+      say "Upgraded to v#{Tentacle.version}"
       say "Be sure to restart the Rails application to see the changes take effect."
     end
   end
   
-  desc "Checks whether the current setup uses the recommended file/directory structure (see warehouse:setup)"
+  desc "Checks whether the current setup uses the recommended file/directory structure (see tentacle:setup)"
   task :check_structure => :init_highline do
     @app_root = Pathname.new(Dir.pwd)
     
@@ -35,23 +35,23 @@ namespace :warehouse do
       (@app_root.dirname.dirname + 'shared').exist?
   end
   
-  desc "Attempts to setup Warehouse with the recommended file/directory structure.  It lets you know what it's doing before making the change."
+  desc "Attempts to setup Tentacle with the recommended file/directory structure.  It lets you know what it's doing before making the change."
   task :setup => :check_structure do
     if @in_structure
-      say "Warehouse is already setup correctly."
+      say "Tentacle is already setup correctly."
     else      
-      top_level = ENV['TOP_LEVEL'] || 'warehouse'
-      rel_path = "releases/warehouse-#{Warehouse.version}"
-      say "It doesn't look like Warehouse is setup in the recommended structure:"
+      top_level = ENV['TOP_LEVEL'] || 'tentacle'
+      rel_path = "releases/tentacle-#{Tentacle.version}"
+      say "It doesn't look like Tentacle is setup in the recommended structure:"
       puts
       say "#{@app_root.dirname}/#{top_level}/shared <-- shared config files"
-      say "#{@app_root.dirname}/#{top_level}/#{rel_path} <-- this warehouse release"
-      say "#{@app_root.dirname}/#{top_level}/current <-- symlink of latest warehouse release"
+      say "#{@app_root.dirname}/#{top_level}/#{rel_path} <-- this tentacle release"
+      say "#{@app_root.dirname}/#{top_level}/current <-- symlink of latest tentacle release"
       puts
       say "The added benefits are simpler Web Server configuration and upgradeability."
       puts
-      if agree("Would you like to setup Warehouse like this? [y/n]")
-        rel_files = ['config/database.yml', 'config/initializers/warehouse.rb', 'public/avatars'].inject({}) do |memo, path|
+      if agree("Would you like to setup Tentacle like this? [y/n]")
+        rel_files = ['config/database.yml', 'config/initializers/tentacle.rb', 'public/avatars'].inject({}) do |memo, path|
           memo.update path => File.expand_path(path)
         end
 
@@ -64,21 +64,21 @@ namespace :warehouse do
           next unless File.exist?(full)
           cp_r full, File.join('shared', path)
         end
-        touch 'shared/config/initializers/warehouse.rb' unless File.exist?('shared/config/initializers/warehouse.rb')
+        touch 'shared/config/initializers/tentacle.rb' unless File.exist?('shared/config/initializers/tentacle.rb')
         touch 'shared/config/database.yml'              unless File.exist?('shared/config/database.yml')
         mkdir_p 'shared/public/avatars'
         mv @app_root.to_s, rel_path
         
         Dir.chdir rel_path
         ENV['WAREHOUSE_FORCE'] = '1'
-        Rake::Task["warehouse:upgrade"].invoke
+        Rake::Task["tentacle:upgrade"].invoke
       end
     end
   end
   
-  desc "Bootstraps Warehouse by checking for various libs, creating your database.yml, and reloading the database schema."
+  desc "Bootstraps Tentacle by checking for various libs, creating your database.yml, and reloading the database schema."
   task :bootstrap => :check_structure do
-    say "Bootstrapping Warehouse v#{Warehouse.version}..."
+    say "Bootstrapping Tentacle v#{Tentacle.version}..."
     
     puts
     say "1) Check for subversion bindings and proper permissions"
@@ -99,7 +99,7 @@ namespace :warehouse do
     if File.writable?('config/initializers')
       say "... looks good!"
     else
-      say "The config/initializers directy should be writable to rails so Warehouse can store this copy's configuration."
+      say "The config/initializers directy should be writable to rails so Tentacle can store this copy's configuration."
       return
     end
     
@@ -169,19 +169,19 @@ namespace :warehouse do
     puts
 
     mkdir_p File.join(RAILS_ROOT, 'log')
-    warehouse_path = File.join(RAILS_ROOT, 'config', 'initializers', 'warehouse.rb')
-    rm warehouse_path if File.exist?(warehouse_path)
+    tentacle_path = File.join(RAILS_ROOT, 'config', 'initializers', 'tentacle.rb')
+    rm tentacle_path if File.exist?(tentacle_path)
     
     %w(environment db:schema:load tmp:create).each { |t| Rake::Task[t].invoke }
     
     say '=' * 80
     puts
-    say "Warehouse v#{Warehouse.version} is ready to roll."
+    say "Tentacle v#{Tentacle.version} is ready to roll."
     say "Okay, thanks for bootstrapping!  I know I felt some chemistry here, did you?"
     say "Now, start the application with 'script/server' and visit http://mydomain.com/ to start the installation process."
     puts
     say "For help, visit the following:"
-    say "  Official Warehouse Site - http://warehouseapp.com"
+    say "  Official Tentacle Site - http://tentacleapp.com"
     say "  The Active Reload Forum - http://forum.activereload.net"
     say "  ActiveReload on IRC (Freenode): #activereload"
   end
@@ -194,7 +194,7 @@ namespace :warehouse do
       require 'pathname'
       require "highline"
       require "forwardable"
-      require 'lib/warehouse'
+      require 'lib/tentacle'
       
       $terminal = HighLine.new
       class << self

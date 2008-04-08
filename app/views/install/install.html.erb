@@ -1,7 +1,7 @@
 <div id="installer">
-  <h1 id="splash">Install Warehouse</h1>
+  <h1 id="splash">Install Tentacle</h1>
   <div class="overlay-content">
-    <h2>Thanks for installing Warehouse, enjoy!</h2>
+    <h2>Thanks for installing Tentacle, enjoy!</h2>
     
     <% if @repository.silo -%>
     <div class="overlay-form oform">
@@ -10,7 +10,7 @@
       <% if @repository.latest_revision >= 5000 %>
       <p style="line-height:140%;">
         It appears you have over 5000 changesets. Syncing from <code>rake</code> is much faster.
-        <pre><code>rake warehouse:sync REPO=<%=h @repository.subdomain %> RAILS_ENV=<%= RAILS_ENV %></code></pre> 
+        <pre><code>rake tentacle:sync REPO=<%=h @repository.subdomain %> RAILS_ENV=<%= RAILS_ENV %></code></pre> 
       </p>
       <% else %>
       <p style="margin:10px 0">

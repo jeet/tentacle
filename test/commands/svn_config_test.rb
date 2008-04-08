@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
-Warehouse::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
+Tentacle::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
 
 context "Command svn access config" do
-  @@config = File.join(RAILS_ROOT, 'tmp', 'warehouse', 'config')
+  @@config = File.join(RAILS_ROOT, 'tmp', 'tentacle', 'config')
   setup do
-    @command = Warehouse::Command.new
+    @command = Tentacle::Command.new
     FileUtils.mkdir_p File.dirname(@@config)
     FileUtils.rm_rf @@config
   end

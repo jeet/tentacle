@@ -1,9 +1,7 @@
 class SessionsController < ApplicationController
-  skip_before_filter :check_for_repository
-
   def create
     if using_open_id?
-      cookies['use_svn'] = {:value => '0', :expires => 1.year.ago.utc, :domain => ".#{Warehouse.domain}", :path => '/'}
+      cookies['use_svn'] = {:value => '0', :expires => 1.year.ago.utc, :domain => ".#{Tentacle.domain}", :path => '/'}
       authenticate_with_open_id do |result, identity_url|
         if result.successful? && self.current_user = User.find_or_create_by_identity_url(identity_url)
           successful_login
@@ -12,7 +10,7 @@ class SessionsController < ApplicationController
         end
       end
     else
-      cookies['use_svn'] = {:value => '1', :expires => 1.year.from_now.utc, :domain => ".#{Warehouse.domain}", :path => '/'}
+      cookies['use_svn'] = {:value => '1', :expires => 1.year.from_now.utc, :domain => ".#{Tentacle.domain}", :path => '/'}
       if self.current_user = User.authenticate(params[:login], params[:password])
         successful_login
       else
@@ -23,7 +21,7 @@ class SessionsController < ApplicationController
   
   def destroy
     reset_session
-    cookies[:login_token] = {:value => '', :expires => 1.year.ago, :domain => ".#{Warehouse.domain}", :path => '/'}
+    cookies[:login_token] = {:value => '', :expires => 1.year.ago, :domain => ".#{Tentacle.domain}", :path => '/'}
     redirect_to root_path
   end
   
@@ -46,7 +44,7 @@ class SessionsController < ApplicationController
     self.current_user = User.find_by_token(params[:token]) unless params[:token].blank?
     return if request.get? && params[:open_id_complete].nil?
     if using_open_id?
-      cookies['use_svn'] = {:value => '0', :expires => 1.year.ago.utc, :domain => ".#{Warehouse.domain}", :path => '/'}
+      cookies['use_svn'] = {:value => '0', :expires => 1.year.ago.utc, :domain => ".#{Tentacle.domain}", :path => '/'}
       authenticate_with_open_id do |result, identity_url|
         if result.successful?
           current_user.identity_url = identity_url
@@ -55,7 +53,7 @@ class SessionsController < ApplicationController
         end
       end
     else
-      cookies['use_svn'] = {:value => '1', :expires => 1.year.from_now.utc, :domain => ".#{Warehouse.domain}", :path => '/'}
+      cookies['use_svn'] = {:value => '1', :expires => 1.year.from_now.utc, :domain => ".#{Tentacle.domain}", :path => '/'}
     end
     unless performed? 
       current_user.reset_token!
@@ -65,7 +63,7 @@ class SessionsController < ApplicationController
 
 protected
   def successful_login
-    cookies[:login_token] = {:value => "#{current_user.id};#{current_user.token}", :expires => 1.year.from_now.utc, :domain => ".#{Warehouse.domain}", :path => '/'}
+    cookies[:login_token] = {:value => "#{current_user.id};#{current_user.token}", :expires => 1.year.from_now.utc, :domain => ".#{Tentacle.domain}", :path => '/'}
     redirect_to root_path
   end
 end

@@ -7,8 +7,8 @@
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
-# Set this to :path to have URLs like http://my-warehouse.com/repo1/* instead of 
-# http://repo1.my-warehouse.com/*
+# Set this to :path to have URLs like http://my-tentacle.com/repo1/* instead of 
+# http://repo1.my-tentacle.com/*
 # USE_REPO_PATHS = true
 
 # Bootstrap the Rails environment, frameworks, and default configuration
@@ -32,7 +32,7 @@ Rails::Initializer.run do |config|
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
   config.action_controller.session = {
-    :session_key => '_warehouse_session',
+    :session_key => '_tentacle_session',
     :secret      => '4b3eaf64bfa62da140e0f45c9030f272'
   }
 
@@ -56,8 +56,4 @@ Rails::Initializer.run do |config|
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory is automatically loaded
   
-  config.after_initialize do
-    require 'diff-display'
-    Silo::Node.send :include, PathAccessibility
-  end
 end

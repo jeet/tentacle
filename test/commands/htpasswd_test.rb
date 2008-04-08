@@ -1,11 +1,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
-Warehouse::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
+Tentacle::Command.configure(ActiveRecord::Base.configurations['test'].symbolize_keys)
 
 context "Command htpasswd" do
-  @@htpasswd = File.join(RAILS_ROOT, 'tmp', 'warehouse', 'htpasswd')
+  @@htpasswd = File.join(RAILS_ROOT, 'tmp', 'tentacle', 'htpasswd')
   
   setup do
-    @command = Warehouse::Command.new
+    @command = Tentacle::Command.new
     FileUtils.mkdir_p File.dirname(@@htpasswd)
     FileUtils.rm_rf @@htpasswd
   end

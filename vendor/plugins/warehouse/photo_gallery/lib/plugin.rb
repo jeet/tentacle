@@ -1,6 +1,6 @@
-module Warehouse
+module Tentacle
   module Plugins
-    class PhotoGallery < Warehouse::Plugins::Base
+    class PhotoGallery < Tentacle::Plugins::Base
       author 'Active Reload'
       version '1.0'
       homepage 'http://activereload.net'

@@ -3,15 +3,7 @@ module ApplicationHelper
   def path?(path)
     controller_path[0..path.length-1] == path
   end
-  
-  def full_svn_url?
-    @full_svn_url || (controller.controller_name == 'browser' && current_repository && current_repository.full_url)
-  end
-  
-  def full_svn_url
-    @full_svn_url ||= current_repository.full_url.dup << (@node ? @node.path : '')
-  end
-  
+
   def use_login_form?
     @use_login_form ||= !cookies['use_svn'].blank? && cookies['use_svn'].to_s == '1'
   end
@@ -39,7 +31,7 @@ if Object.const_defined?(:Uv)
   def highlight_syntax_in(node, show_blame=false)
     parsed = nil
     benchmark "Highlighting #{node.path}" do
-      parsed = Uv.parse(node.content, "xhtml", highlight_as(node.path.split("/").last), true, Warehouse.source_highlight_theme)
+      parsed = Uv.parse(node.content, "xhtml", highlight_as(node.path.split("/").last), true, Tentacle.source_highlight_theme)
       parsed.gsub!(/<span class="line-numbers">(\s+\d+\s+)<\/span>/) do |s|
         line_num = $1.to_i
         line_len = node.blame.size.to_s.length
@@ -115,22 +107,6 @@ end
   def avatar_for(user)
     img = user && user.avatar? ? user.avatar_path : '/images/app/icons/member.png'
     tag('img', :src => img, :class => 'avatar', :alt => 'avatar')
-  end
-  
-  def changeset_feed_url(repo = current_repository)
-    if repo
-      hosted_url(:formatted_changesets, :atom)
-    else
-      logged_in? && controller.action_name != 'public' ? formatted_root_changesets_path(:atom) : formatted_root_public_changesets_path(:atom)
-    end
-  end
-  
-  def activity_url(repo = current_repository)
-    if repo
-      hosted_url :changesets
-    else
-      logged_in? ? root_changesets_path : root_public_changesets_path
-    end
   end
 
   @@default_jstime_format = "%d %b, %Y %I:%M %p"
