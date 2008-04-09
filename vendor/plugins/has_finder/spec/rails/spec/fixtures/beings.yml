@@ -1,0 +1,20 @@
+socrates:
+  id: 1
+  country: greece
+  race: mortal
+  type: 
+xerxes:
+  id: 2
+  country: persia
+  race: mortal
+  type: 
+zeus:
+  id: 3
+  country: greece
+  race: divine
+  type: 
+monkey:
+  id: 4
+  country: africa
+  race:
+  type: BeingSubclass
