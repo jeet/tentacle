@@ -1,3 +1,18 @@
+# == Schema Information
+# Schema version: 31
+#
+# Table name: avatars
+#
+#  id           :integer(11)     not null, primary key
+#  content_type :string(255)     
+#  filename     :string(255)     
+#  size         :integer(11)     
+#  parent_id    :integer(11)     
+#  thumbnail    :string(255)     
+#  width        :integer(11)     
+#  height       :integer(11)     
+#
+
 class Avatar < ActiveRecord::Base
   has_attachment :storage => :file_system, :content_type => :image, :resize_to => '32x32'
   validates_as_attachment

@@ -1,0 +1,85 @@
+Migration Buddy
+==============
+
+Or, "the inevitable renumbering and conflict-resolution of miggy tardust"
+
+This is a tool to help merge rails branches with conflicting migrations.  The basic
+idea goes like this:
+
+* First you migrate down to the migration you were at when you branched.
+* Renumber any new migrations you created that conflict with any new migrations in
+  the target branch.
+* Commit the renames.
+* Merge to the target branch (usually 'master').
+* Migrate back up.
+
+Wow, what a pain, right?  Instead, make sure your new branch has a clean working copy:
+
+(These examples use the included example app)
+
+  $ git checkout example
+  $ rake git:rebase_migrations BRANCH=example MASTER=example
+  (in /Users/rick/migration_buddy)
+  No new migrations in "example"
+  No new migrations in "example" either, you're clear!
+
+If you have no new migrations, rock on!  (So what, that was a contrived example)
+
+  $ git checkout posting-with-comments
+  $ rake git:rebase_migrations MASTER=posting
+  (in /Users/rick/migration_buddy)
+  No new migrations in "posting"
+  1 new migration(s) in "posting-with-comments": ["004_add_comments.rb"].
+  You should 'rake db:migrate VERSION=3' before merging with "posting
+
+There were no new migrations in the master branch, so no rebasing needed.  Notice
+how it guessed the BRANCH var from the current branch.  It defaults MASTER to 'master',
+but the plugin itself is in the example's master branch.
+
+  $ git checkout posting
+  $ rake git:rebase_migrations MASTER=example
+  (in /Users/rick/migration_buddy)
+  1 new migration(s) in "master": ["002_modify_users.rb"].
+  2 new migration(s) in "posting": ["002_add_posts.rb", "003_make_posts_whatever.rb"].
+
+  Suggested Renumbering...
+  git mv db/migrate/002_add_posts.rb db/migrate/003_add_posts.rb
+  git mv db/migrate/003_make_posts_whatever.rb db/migrate/004_make_posts_whatever.rb
+
+  Run with RUN=1 to actually rename the files.
+
+Finally, something interesting!  It suggests the 'git mv' commands for you, but doesn't 
+actually do anything.
+
+  $ rake git:rebase_migrations MASTER=example RUN=1
+  (in /Users/rick/migration_buddy)
+  1 new migration(s) in "example": ["002_modify_users.rb"].
+  2 new migration(s) in "posting": ["002_add_posts.rb", "003_make_posts_whatever.rb"].
+
+  Renumbering...
+  git mv db/migrate/002_add_posts.rb db/migrate/003_add_posts.rb
+  git mv db/migrate/003_make_posts_whatever.rb db/migrate/004_make_posts_whatever.rb
+
+  Migrations rebased!  Next actions:
+   rake db:migrate VERSION=1
+   git commit -m '...'
+   git checkout example
+   git merge posting
+   rake db:migrate
+
+Don't forget to install the fancy grit gem:
+
+  sudo gem install grit
+
+License
+=======
+
+This is licensed under the WTFPL License
+
+http://sam.zoy.org/wtfpl/
+
+It'll probably be included in Rails.  Until then:
+
+  http://github.com/technoweenie/rails_migration_buddy/tree
+
+Happy rebasing!

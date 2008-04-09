@@ -1,20 +1,36 @@
+# == Schema Information
+# Schema version: 31
+#
+# Table name: users
+#
+#  id               :integer(11)     not null, primary key
+#  identity_url     :string(255)     
+#  admin            :boolean(1)      
+#  avatar_id        :integer(11)     
+#  avatar_path      :string(255)     
+#  email            :string(255)     
+#  token            :string(255)     
+#  login            :string(255)     
+#  crypted_password :string(255)     
+#  public_key       :text            
+#
+
 require 'digest/md5'
 class User < ActiveRecord::Base
   attr_accessor :avatar_data
-    
   attr_accessor :password
-  validates_format_of       :email, :with => /(\A(\s*)\Z)|(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z)/i, :allow_nil => true
+  attr_accessible :identity_url, :avatar_data, :login, :password, :password_confirmation
+  
   validates_confirmation_of :password, :allow_nil => true
   validates_uniqueness_of :identity_url, :allow_nil => true
-  [:email, :login].each do |attr|
-    validates_uniqueness_of attr, :if => lambda { |u| !u.send(attr).blank? }
-  end
+  validates_uniqueness_of :login, :if => lambda { |u| !u.login.blank? }
   validate :presence_of_identity_url_or_email
+  
   before_create :set_default_attributes
-  before_save   :sanitize_email
-  attr_accessible :identity_url, :avatar_data, :email, :login, :password, :password_confirmation
-  belongs_to :avatar
   before_save :save_avatar_data
+
+  belongs_to :avatar
+  has_one :profile
 
   def self.find_all_by_logins(logins)
     find :all, :conditions => ['login IN (?)', logins]
@@ -26,17 +42,7 @@ class User < ActiveRecord::Base
   end
 
   def name
-    (login.blank? ? nil : login) || sanitized_email || identity_path
-  end
-
-  def sanitized_email
-    if !email.blank? && email =~ /^([^@]+)@(.*?)(\.co)?\.\w+$/
-      "#{$1} (at #{$2})"
-    end
-  end
-
-  def email=(value)
-    write_attribute :email, value.blank? ? value : value.downcase
+    (login.blank? ? nil : login) || profile.sanitized_email || identity_path
   end
 
   def avatar?
@@ -97,13 +103,8 @@ class User < ActiveRecord::Base
       true
     end
 
-    def sanitize_email
-      encrypt_password! unless password.blank?
-      email.downcase!   unless email.blank?
-    end
-    
     def presence_of_identity_url_or_email
-      if identity_url.blank? && (email.blank? || login.blank?)
+      if identity_url.blank? && (profile.email.blank? || login.blank?)
         errors.add_to_base "Requires at least an email and login"
       end
     end
