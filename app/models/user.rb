@@ -1,5 +1,5 @@
 # == Schema Information
-# Schema version: 31
+# Schema version: 9
 #
 # Table name: users
 #
@@ -8,7 +8,6 @@
 #  admin            :boolean(1)      
 #  avatar_id        :integer(11)     
 #  avatar_path      :string(255)     
-#  email            :string(255)     
 #  token            :string(255)     
 #  login            :string(255)     
 #  crypted_password :string(255)     

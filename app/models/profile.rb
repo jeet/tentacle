@@ -1,14 +1,26 @@
+# == Schema Information
+# Schema version: 9
+#
+# Table name: profiles
+#
+#  id         :integer(11)     not null, primary key
+#  user_id    :integer(11)     
+#  first_name :string(255)     
+#  last_name  :string(255)     
+#  website    :string(255)     
+#  about      :string(255)     
+#  created_at :datetime        
+#  updated_at :datetime        
+#  email      :string(255)     
+#
+
 class Profile < ActiveRecord::Base
   belongs_to :user
+
+  can_follow
   
-  has_many :friendships, :class_name  => "Friendship", :conditions => '(requester_id=#{id} OR requested_id=#{id}) AND status = #{Friendship::APPROVED}'
-  has_many :follower_friends, :class_name => "Friendship", :foreign_key => "requested_id", :conditions => "status = #{Friendship::PENDING}"
-  has_many :following_friends, :class_name => "Friendship", :foreign_key => "requester_id", :conditions => "status = #{Friendship::PENDING}"
+  validates_presence_of :first_name, :last_name, :email
   
-  has_many :friends,   :through => :friendships, :source => :requested
-  has_many :followers, :through => :follower_friends, :source => :requester
-  has_many :followings, :through => :following_friends, :source => :requested
-   
   validates_format_of     :email, :with => /(\A(\s*)\Z)|(\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z)/i, :allow_nil => true
   validates_uniqueness_of :email, :if => lambda { |p| !p.email.blank? }
   
@@ -24,9 +36,12 @@ class Profile < ActiveRecord::Base
     write_attribute :email, value.blank? ? value : value.downcase
   end
   
+  def full_name
+    "#{first_name} #{last_name}"
+  end
+
   protected
     def sanitize_email
-      encrypt_password! unless password.blank?
       email.downcase!   unless email.blank?
     end
     
