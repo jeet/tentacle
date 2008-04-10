@@ -1,4 +1,4 @@
-# desc "Explaining what the task does"
-# task :friends do
-#   # Task goes here
-# end
+desc "Do install tasks for plugins"
+task :install_plugins do
+  # Generate migration
+end

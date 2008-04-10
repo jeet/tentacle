@@ -1,0 +1,16 @@
+<div>
+  <h2>
+    <%= @profile.first_name %><strong><%= @profile.last_name %></strong> (<%= @user.login %>)
+    <% if @user.id == current_user.id %>
+      [<%= link_to 'edit', edit_profile_path('me') %>]
+    <% end %>
+  </h2>
+  
+  <p>
+    <ul>
+      <li>E-mail: <%= @profile.sanitized_email %></li>
+      <li>Website: <%= @profile.website %></li>
+      <li>About Me: <%= @profile.about %></li>
+    </ul>
+  </p>
+</div>

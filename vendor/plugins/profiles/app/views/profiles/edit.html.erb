@@ -1,0 +1,9 @@
+<%= error_messages_for :page %>
+
+<% form_for(@profile, :url => {:controller => 'profiles', :action => 'update'}, :method => 'put') do |f| %>
+	<%= render :partial => "form", :locals => {:f => f} %>
+	
+	<%= submit_tag %>
+<% end %>
+
+<p class="form_cancel"><%= link_to 'Cancel', profile_path('me') %></p>
