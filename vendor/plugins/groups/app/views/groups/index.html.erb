@@ -1,0 +1,14 @@
+<h1>Groups index</h1>
+
+<p>Here are all the groups we know about</p>
+
+<% if @groups.empty? %>
+There aren't any groups!
+<% end %>
+<ul>
+<% @groups.each do |group| %>
+  <li><%= link_to h(group.name), group %> (<%= group.members.size %>)</li>
+<% end %>
+</ul>
+
+<p><%= link_to "Create a new group", new_group_path %></p>

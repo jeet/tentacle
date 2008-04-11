@@ -1,0 +1,13 @@
+<h1>Create a new group</h1>
+
+<% form_for @group do |form| %>
+
+<p>
+  <%= form.label :name %>
+  <%= form.text_field :name %>
+</p>
+
+<p class="submit">
+  <%= form.submit %>
+</p>
+<% end %>

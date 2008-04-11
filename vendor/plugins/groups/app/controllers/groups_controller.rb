@@ -1,6 +1,11 @@
 class GroupsController < ApplicationController
+
+  def index
+    @groups = Group.find(:all)
+  end
+  
   def show
-    @group = Group.find_by_name(params[:id].titleize || 'Default')
+    @group = Group.find_by_name(params[:id].titleize) or raise ActiveRecord::RecordNotFound
     
     respond_to do |format|
       format.html
@@ -8,6 +13,7 @@ class GroupsController < ApplicationController
   end
   
   def new
+    @group = Group.new
   end
   
   def edit
@@ -48,4 +54,6 @@ class GroupsController < ApplicationController
       format.html { redirect_to(root_path) }
     end
   end
+  
+  rescue_from ActiveRecord::RecordNotFound, :with => proc { |e| redirect_to('/') }
 end

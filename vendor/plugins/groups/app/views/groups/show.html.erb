@@ -1,0 +1,9 @@
+<h1>Group: <%=h @group.name %></h1>
+
+<p>Group members:</p>
+
+<ul>
+<% @group.members.each do |member| %>
+  <li><%= link_to h(member.name), member %></li>
+<% end %>
+</ul>
