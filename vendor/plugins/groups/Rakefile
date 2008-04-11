@@ -1,0 +1,37 @@
+require 'rake'
+require 'spec/rake/spectask'
+require 'rake/rdoctask'
+
+require 'spec/spec_helper'
+
+desc 'Default: run unit tests.'
+task :default => :spec
+
+desc 'Generate documentation for the profiles plugin.'
+Rake::RDocTask.new(:rdoc) do |rdoc|
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title    = 'Profiles'
+  rdoc.options << '--line-numbers' << '--inline-source'
+  rdoc.rdoc_files.include('README')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+namespace :spec do
+  desc "Run all plugin specs"
+  Spec::Rake::SpecTask.new(:models) do |t|
+    t.spec_files = FileList['spec/models/*_spec.rb']
+    t.spec_opts = ['--options', 'spec/spec.opts']
+  end
+
+  desc "Run all plugin specs"
+  Spec::Rake::SpecTask.new(:controllers) do |t|
+    t.spec_files = FileList['spec/controllers/*_spec.rb']
+    t.spec_opts = ['--options', 'spec/spec.opts']
+  end
+
+  desc "Run all plugin specs"
+  Spec::Rake::SpecTask.new(:all) do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.spec_opts = ['--options', 'spec/spec.opts']
+  end
+end
