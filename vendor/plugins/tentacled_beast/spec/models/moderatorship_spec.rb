@@ -11,7 +11,7 @@ describe Moderatorship do
     end
     
     model Forum do
-      stub :other_site, :name => "Other", :site => all_stubs(:other_site)
+      stub :other_site, :name => "Other", :group => all_stubs(:group)
     end
   end
 
