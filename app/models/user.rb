@@ -27,6 +27,7 @@ class User < ActiveRecord::Base
   
   before_create :set_default_attributes
   before_save :save_avatar_data
+  after_save :encrypt_password
 
   belongs_to :avatar
   has_one :profile
@@ -84,11 +85,12 @@ class User < ActiveRecord::Base
   end
   
   def encrypt_password(password = nil)
-    self.class.encrypt_password self, password
+    self.class.encrypt_password self, password if password
   end
   
   def encrypt_password!(password = nil)
-    self.crypted_password = self.class.encrypt_password(self, password)
+    self.crypted_password = self.class.encrypt_password(self, password) if password
+    save
   end
   
   def password_matches?(password)
