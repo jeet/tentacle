@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/3248/trunk/rspec/spec/spec/runner/resources
+END
+a_foo.rb
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3246/trunk/rspec/spec/spec/runner/resources/a_foo.rb
+END
+a_bar.rb
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3246/trunk/rspec/spec/spec/runner/resources/a_bar.rb
+END
+a_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/3248/trunk/rspec/spec/spec/runner/resources/a_spec.rb
+END

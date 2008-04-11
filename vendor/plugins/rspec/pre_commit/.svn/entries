@@ -1,0 +1,34 @@
+8
+
+dir
+3333
+http://rspec.rubyforge.org/svn/trunk/rspec/pre_commit
+http://rspec.rubyforge.org/svn
+
+
+
+2008-03-03T11:40:40.568864Z
+3320
+dchelimsky
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+410327ef-2207-0410-a325-f78bbcb22a5a
+
+lib
+dir
+
+spec
+dir
+

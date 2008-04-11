@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 45
+/svn/!svn/ver/3330/trunk/rspec/lib/spec/story
+END
+extensions.rb
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3225/trunk/rspec/lib/spec/story/extensions.rb
+END
+story.rb
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3323/trunk/rspec/lib/spec/story/story.rb
+END
+scenario.rb
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/2588/trunk/rspec/lib/spec/story/scenario.rb
+END
+step_group.rb
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/3065/trunk/rspec/lib/spec/story/step_group.rb
+END
+world.rb
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/!svn/ver/3330/trunk/rspec/lib/spec/story/world.rb
+END
+runner.rb
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/3317/trunk/rspec/lib/spec/story/runner.rb
+END
+step_mother.rb
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/2909/trunk/rspec/lib/spec/story/step_mother.rb
+END
+given_scenario.rb
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3065/trunk/rspec/lib/spec/story/given_scenario.rb
+END
+step.rb
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/3241/trunk/rspec/lib/spec/story/step.rb
+END

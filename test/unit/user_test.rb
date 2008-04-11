@@ -8,7 +8,7 @@ context "User" do
   
   specify "should authenticate with httpbasic auth" do
     u = User.new :password => 'monkey'
-    u.send :sanitize_email
+    u.send :encrypt_password
     u.crypted_password.should.not.be.nil
     User.expects(:find_by_login).with('rick').returns(u)
     User.authenticate('rick', 'monkey').should.not.be.nil
@@ -16,7 +16,7 @@ context "User" do
   
   specify "should require valid crypted pass" do
     u = User.new :password => 'monkey'
-    u.send :sanitize_email
+    u.send :encrypt_password
     u.crypted_password.should.not.be.nil
     User.expects(:find_by_login).with('rick').returns(u)
     User.authenticate('rick', 'chicken').should.be.nil

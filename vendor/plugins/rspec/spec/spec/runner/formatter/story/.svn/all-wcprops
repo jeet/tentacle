@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/3267/trunk/rspec/spec/spec/runner/formatter/story
+END
+html_formatter_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/3224/trunk/rspec/spec/spec/runner/formatter/story/html_formatter_spec.rb
+END
+plain_text_formatter_spec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/3267/trunk/rspec/spec/spec/runner/formatter/story/plain_text_formatter_spec.rb
+END

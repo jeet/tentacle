@@ -1,0 +1,52 @@
+8
+
+dir
+3333
+http://rspec.rubyforge.org/svn/trunk/rspec/lib/autotest
+http://rspec.rubyforge.org/svn
+
+
+
+2008-02-16T06:08:17.572318Z
+3311
+dchelimsky
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+410327ef-2207-0410-a325-f78bbcb22a5a
+
+discover.rb
+file
+
+
+
+
+2008-04-11T17:42:24.000000Z
+0eed8166bd4b13ef4eb130b96f3e2ebc
+2007-06-03T22:49:21.418619Z
+2072
+aslak_hellesoy
+
+rspec.rb
+file
+
+
+
+
+2008-04-11T17:42:24.000000Z
+42e9db36bd97c096849d75b7fac48c23
+2008-02-16T06:08:17.572318Z
+3311
+dchelimsky
+

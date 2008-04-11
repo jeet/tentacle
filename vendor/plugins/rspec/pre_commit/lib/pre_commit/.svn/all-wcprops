@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3320/trunk/rspec/pre_commit/lib/pre_commit
+END
+pre_commit.rb
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/3264/trunk/rspec/pre_commit/lib/pre_commit/pre_commit.rb
+END
+rspec_on_rails.rb
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/3320/trunk/rspec/pre_commit/lib/pre_commit/rspec_on_rails.rb
+END
+core.rb
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/3257/trunk/rspec/pre_commit/lib/pre_commit/core.rb
+END
+rspec.rb
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/3264/trunk/rspec/pre_commit/lib/pre_commit/rspec.rb
+END

@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3291/trunk/rspec/lib/spec/expectations
+END
+handler.rb
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/2860/trunk/rspec/lib/spec/expectations/handler.rb
+END
+extensions.rb
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/1707/trunk/rspec/lib/spec/expectations/extensions.rb
+END
+errors.rb
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/2998/trunk/rspec/lib/spec/expectations/errors.rb
+END

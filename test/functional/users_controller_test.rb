@@ -17,21 +17,21 @@ context "Users Controller" do
   
   specify "should allow user to update self" do
     login_as :justin
-    put :update, :user => {:email => 'justin2@wh.com'}
+    put :update, :id => users(:justin).id, :user => { :password => 'neep'}
     assert_redirected_to root_path
-    users(:justin).email.should == 'justin2@wh.com'
+    users(:justin).login.should == 'railsfoeva'
   end
   
   specify "should not allow user to update admin setting" do
     login_as :justin
-    put :update, :user => {:email => 'justin2@wh.com', :admin => '1'}
+    put :update, :id => users(:justin).id, :user => { :admin => '1'}
     assert_redirected_to root_path
     users(:justin).should.not.be.admin
   end
   
   specify "should allow admin to update user admin setting" do
     login_as :rick
-    put :update, :id => 2, :user => {:email => 'justin2@wh.com', :admin => '1'}
+    put :update, :id => 2, :user => { :admin => '1'}
     assert_redirected_to root_path
     users(:justin).should.be.admin
   end
@@ -128,9 +128,10 @@ context "Users Controller Access" do
     assert_match /^passed/, @response.body
   end
 
-  specify "should allow user for update without id" do
-    login_as :justin
-    put :update
-    assert_match /^passed/, @response.body
-  end
+  # TODO: Do we really want them to do this now?
+  # specify "should allow user for update without id" do
+  #   login_as :justin
+  #   put :update
+  #   assert_match /^passed/, @response.body
+  # end
 end

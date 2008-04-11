@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 30
+/svn/!svn/ver/3333/trunk/rspec
+END
+Rakefile
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/3258/trunk/rspec/Rakefile
+END
+init.rb
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/2952/trunk/rspec/init.rb
+END
+TODO
+K 25
+svn:wc:ra_dav:version-url
+V 35
+/svn/!svn/ver/3080/trunk/rspec/TODO
+END
+.autotest
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/svn/!svn/ver/3245/trunk/rspec/.autotest
+END
+UPGRADE
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/1707/trunk/rspec/UPGRADE
+END
+CHANGES
+K 25
+svn:wc:ra_dav:version-url
+V 38
+/svn/!svn/ver/3329/trunk/rspec/CHANGES
+END
+MIT-LICENSE
+K 25
+svn:wc:ra_dav:version-url
+V 42
+/svn/!svn/ver/1707/trunk/rspec/MIT-LICENSE
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 37
+/svn/!svn/ver/3320/trunk/rspec/README
+END

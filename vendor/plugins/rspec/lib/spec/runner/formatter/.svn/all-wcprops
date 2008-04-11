@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3306/trunk/rspec/lib/spec/runner/formatter
+END
+base_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/3305/trunk/rspec/lib/spec/runner/formatter/base_formatter.rb
+END
+snippet_extractor.rb
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/2072/trunk/rspec/lib/spec/runner/formatter/snippet_extractor.rb
+END
+text_mate_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/2865/trunk/rspec/lib/spec/runner/formatter/text_mate_formatter.rb
+END
+base_text_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/3305/trunk/rspec/lib/spec/runner/formatter/base_text_formatter.rb
+END
+profile_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/3151/trunk/rspec/lib/spec/runner/formatter/profile_formatter.rb
+END
+specdoc_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/3305/trunk/rspec/lib/spec/runner/formatter/specdoc_formatter.rb
+END
+failing_example_groups_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/3306/trunk/rspec/lib/spec/runner/formatter/failing_example_groups_formatter.rb
+END
+html_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/3305/trunk/rspec/lib/spec/runner/formatter/html_formatter.rb
+END
+failing_examples_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/3306/trunk/rspec/lib/spec/runner/formatter/failing_examples_formatter.rb
+END
+progress_bar_formatter.rb
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/3305/trunk/rspec/lib/spec/runner/formatter/progress_bar_formatter.rb
+END

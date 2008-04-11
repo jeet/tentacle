@@ -8,9 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.from_plugin :tentacled_beast
   
   map.with_options :path_prefix => 'admin' do |admin|
-    admin.resources :plugins
-    admin.resources :hooks
-    admin.resources :users, :has_one => [:permissions]
+    admin.resources :users
   end
   
   map.with_options :controller => "sessions" do |s|

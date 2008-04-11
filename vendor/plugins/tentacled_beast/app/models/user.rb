@@ -31,8 +31,7 @@ class User < ActiveRecord::Base
   end
 
   def display_name
-    n = read_attribute(:display_name)
-    n.blank? ? login : n
+    n = read_attribute(:login)
   end
   
   # this is used to keep track of the last time a user has been seen (reading a topic)

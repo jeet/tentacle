@@ -36,7 +36,7 @@
     <!-- container -->
     <div id="container">
       <% if logged_in? %>
-        <% sheet_form_for current_user, :url => hosted_url(:profile, :to => request.request_uri), :html => { :multipart => true, :id => 'profile-form', :method => :put }, :trigger => false do |s| -%>
+        <% sheet_form_for current_user, :url => profiles_url, :trigger => false do |s| -%>
           <h2>Edit your profile</h2>
           <%= content_tag 'p', flash[:error] if flash[:error] %>
           <%= s.text_field 'SVN Login:', :login, :size => 30 %>
@@ -66,7 +66,7 @@
           </ul>
           <ul id="utils">
             <% if logged_in? -%>
-              <li id="profile"><%= link_to 'Profile', hosted_url(:profile) %></li>
+              <li id="profile"><%= link_to 'Profile', profiles_url %></li>
               <li><%= link_to 'Logout', logout_path %></li>
             <% else -%>
               <li id="login-link"><%= link_to 'Login', '#' %></li>

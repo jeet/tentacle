@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :admin_required, :only => [:suspend, :unsuspend, :destroy, :purge, :edit]
-  before_filter :find_user, :only => [:update, :show, :edit, :suspend, :unsuspend, :destroy, :purge]
-  before_filter :login_required, :only => [:settings, :update]
+  before_filter :admin_required, :only => [:suspend, :unsuspend, :purge]
+  before_filter :find_user, :only => [:suspend, :unsuspend, :purge]
+  before_filter :login_required, :only => [:settings]
   
   def index
     @users = current_group.users.paginate :all, :page => current_page
@@ -11,40 +11,9 @@ class UsersController < ApplicationController
   def new
   end
 
-  def create
-    cookies.delete :auth_token
-    @user = current_group.users.build(params[:user])
-    @user.register! if @user.valid?
-    unless @user.new_record?
-      self.current_user = @user
-      redirect_back_or_default('/')
-      flash[:notice] = "Thanks for signing up!"
-    else
-      render :action => 'new'
-    end
-  end
-
   def settings
     @user = current_user
     render :action => "edit"
-  end
-  
-  def edit
-    @user = find_user
-  end
-
-  def update
-    @user = admin? ? find_user : current_user
-    respond_to do |format|
-      if @user.update_attributes(params[:user])
-        flash[:notice] = 'User account was successfully updated.'
-        format.html { redirect_to(settings_path) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
-      end
-    end
   end
 
   def activate

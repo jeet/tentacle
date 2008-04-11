@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/svn/!svn/ver/3323/trunk/rspec/lib/spec/story/runner
+END
+plain_text_story_runner.rb
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/3065/trunk/rspec/lib/spec/story/runner/plain_text_story_runner.rb
+END
+story_mediator.rb
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/3323/trunk/rspec/lib/spec/story/runner/story_mediator.rb
+END
+scenario_collector.rb
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/2470/trunk/rspec/lib/spec/story/runner/scenario_collector.rb
+END
+story_runner.rb
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/3317/trunk/rspec/lib/spec/story/runner/story_runner.rb
+END
+scenario_runner.rb
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/3317/trunk/rspec/lib/spec/story/runner/scenario_runner.rb
+END
+story_parser.rb
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/3195/trunk/rspec/lib/spec/story/runner/story_parser.rb
+END

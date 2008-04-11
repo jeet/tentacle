@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 39
+/svn/!svn/ver/3333/trunk/rspec/lib/spec
+END
+extensions.rb
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/3304/trunk/rspec/lib/spec/extensions.rb
+END
+story.rb
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/3031/trunk/rspec/lib/spec/story.rb
+END
+version.rb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/3329/trunk/rspec/lib/spec/version.rb
+END
+matchers.rb
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/3201/trunk/rspec/lib/spec/matchers.rb
+END
+expectations.rb
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/svn/!svn/ver/2072/trunk/rspec/lib/spec/expectations.rb
+END
+translator.rb
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/2087/trunk/rspec/lib/spec/translator.rb
+END
+runner.rb
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/svn/!svn/ver/3244/trunk/rspec/lib/spec/runner.rb
+END
+example.rb
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/svn/!svn/ver/3118/trunk/rspec/lib/spec/example.rb
+END
+mocks.rb
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/!svn/ver/2485/trunk/rspec/lib/spec/mocks.rb
+END

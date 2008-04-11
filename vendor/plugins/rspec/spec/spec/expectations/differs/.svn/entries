@@ -1,0 +1,40 @@
+8
+
+dir
+3333
+http://rspec.rubyforge.org/svn/trunk/rspec/spec/spec/expectations/differs
+http://rspec.rubyforge.org/svn
+
+
+
+2008-02-10T11:57:15.538930Z
+3291
+dchelimsky
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+410327ef-2207-0410-a325-f78bbcb22a5a
+
+default_spec.rb
+file
+
+
+
+
+2008-04-11T17:42:22.000000Z
+236a53ffe1a9a94d4138ccbecdccca84
+2008-02-10T11:57:15.538930Z
+3291
+dchelimsky
+

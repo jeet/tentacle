@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories
+END
+steps.rb
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/steps.rb
+END
+CellsWithLessThanTwoNeighboursDie.story
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/CellsWithLessThanTwoNeighboursDie.story
+END
+helper.rb
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/helper.rb
+END
+TheGridWraps.story
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/TheGridWraps.story
+END
+create_a_cell.rb
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/create_a_cell.rb
+END
+ICanKillACell.story
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/ICanKillACell.story
+END
+stories.txt
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/stories.txt
+END
+stories.rb
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/stories.rb
+END
+CellsWithMoreThanThreeNeighboursDie.story
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/CellsWithMoreThanThreeNeighboursDie.story
+END
+EmptySpacesWithThreeNeighboursCreateACell.story
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/EmptySpacesWithThreeNeighboursCreateACell.story
+END
+kill_a_cell.rb
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/kill_a_cell.rb
+END
+ICanCreateACell.story
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/behaviour/stories/ICanCreateACell.story
+END

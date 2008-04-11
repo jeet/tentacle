@@ -1,0 +1,46 @@
+8
+
+dir
+3333
+http://rspec.rubyforge.org/svn/trunk/rspec/lib
+http://rspec.rubyforge.org/svn
+
+
+
+2008-03-12T21:19:08.109391Z
+3333
+dchelimsky
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+410327ef-2207-0410-a325-f78bbcb22a5a
+
+autotest
+dir
+
+spec
+dir
+
+spec.rb
+file
+
+
+
+
+2008-04-11T17:42:25.000000Z
+83d06a8f063257311fa6991b36735c5b
+2008-01-20T03:36:03.199831Z
+3240
+dchelimsky
+

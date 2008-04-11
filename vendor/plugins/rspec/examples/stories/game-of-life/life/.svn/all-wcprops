@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/life
+END
+grid.rb
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/life/grid.rb
+END
+game.rb
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/2889/trunk/rspec/examples/stories/game-of-life/life/game.rb
+END

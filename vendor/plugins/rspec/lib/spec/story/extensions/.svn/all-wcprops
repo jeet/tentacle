@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/3225/trunk/rspec/lib/spec/story/extensions
+END
+main.rb
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/2824/trunk/rspec/lib/spec/story/extensions/main.rb
+END
+string.rb
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3225/trunk/rspec/lib/spec/story/extensions/string.rb
+END
+regexp.rb
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/3225/trunk/rspec/lib/spec/story/extensions/regexp.rb
+END
