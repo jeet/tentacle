@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-def create_group(options = {})
-  Group.new({:name => 'Funky Pants'}.merge(options))
-end
-
 describe Group do
+  def create_group(options = {})
+    Group.new({:name => 'Funky Pants'}.merge(options))
+  end
+
   before(:each) do
     @group = create_group
   end
@@ -14,13 +14,14 @@ describe Group do
   end
   
   it "should require a group name" do
-    profile = create_profile(:name => nil)
-    profile.should_not be_valid
+    @group.name = nil
+    @group.should_not be_valid
   end
   
-  it "should have profile associated with it" do
-  end
+  #it "should have profile associated with it" do
+  #end
   
   it "should require a unique group name" do
+    pending "test uniqueness"
   end
 end
