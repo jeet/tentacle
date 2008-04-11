@@ -15,6 +15,10 @@ RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
 
+# Allow us to define routes in plugins
+Rails.mattr_accessor :plugin_routes
+Rails.plugin_routes = []
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
   

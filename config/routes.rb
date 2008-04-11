@@ -4,11 +4,12 @@ REPO_ROOT_REGEX = /^(\/?(admin|install|login|logout|reset|forget))(\/|$)/
 ActionController::Routing::Routes.draw do |map|
   map.connect ":asset/:plugin/*paths", :asset => /images|javascripts|stylesheets/, :controller => "assets", :action => "show"
   
-  map.from_plugin :profiles
-  map.from_plugin :tentacled_beast
-  
   map.with_options :path_prefix => 'admin' do |admin|
     admin.resources :users
+  end
+
+  Rails.plugin_routes.each do |plugin|
+    map.from_plugin plugin
   end
   
   map.with_options :controller => "sessions" do |s|
