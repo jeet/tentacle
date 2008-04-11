@@ -1,5 +1,0 @@
-if @plugin.save
-  page.call "location.reload"
-else
-  page.alert "The plugin options were invalid.  Replace this with a less obtrusive prompt"
-end

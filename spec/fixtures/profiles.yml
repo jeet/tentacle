@@ -1,17 +1,25 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
-one:
+rick_profile:
   user_id: 1
-  first_name: MyString
-  last_name: MyString
-  website: MyString
-  about: MyString
-  email: MyString
+  first_name: Rick
+  last_name: Olson
+  website: http://www.entp.com
+  about: I'm Rick MF'ing Olson!
+  email: rick@thatplace.com
 
-two:
-  user_id: 1
-  first_name: MyString
-  last_name: MyString
-  website: MyString
-  about: MyString
-  email: MyString
+justin_profile:
+  user_id: 2
+  first_name: Justin
+  last_name: Palmer
+  website: http://www.entp.com
+  about: Whut?  d00d.  I don't know.
+  email: justin@entp.com
+
+virginia_profile:
+  user_id: 3
+  first_name: Virginia
+  last_name: Woolf
+  website: http://www.example.com
+  about: Who's afraid of me?  You should be, bitch!
+  email: virgie@ipwnzdan00bz.com
