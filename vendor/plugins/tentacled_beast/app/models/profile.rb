@@ -36,7 +36,9 @@ class Profile
     admin? || Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)
   end
 
-  #def display_name
+  def display_name
+    full_name
+  end
   #  n = read_attribute(:login)
   #end
   
