@@ -1,4 +1,4 @@
-module User::Editable
+module Profile::Editable
   def editable_by?(user)
     user && (user.id == user_id || user.moderator_of?(forum))
   end

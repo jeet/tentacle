@@ -4,4 +4,13 @@ mkdir log
 rake tmp:create
 rake db:schema:load
 
-start server, surf to /install
+
+rake db:migrate:all
+rake db:migrate:plugin[groups]
+rake db:migrate:plugin[profiles]
+rake db:migrate:plugin[tentacled_beast]
+
+rake db:fixtures:load
+
+script/runner "User.find(1).create_profile :email => 'test@test.com'"
+script/runner "Group.create :name => 'Default'"

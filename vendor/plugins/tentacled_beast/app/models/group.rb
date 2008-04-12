@@ -5,8 +5,8 @@ unless defined?(Group)
 end
 
 class Group
-  has_many :users, :conditions => {:state => 'active'}
-  has_many :all_users, :class_name => 'User'
+  # has_many :users, :conditions => {:state => 'active'}
+  # has_many :all_users, :class_name => 'User'
   
   has_many :forums
   has_many :topics, :through => :forums

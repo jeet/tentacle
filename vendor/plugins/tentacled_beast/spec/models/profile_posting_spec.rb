@@ -52,11 +52,11 @@ module TopicCreatePostHelper
   end
 
   def post!
-    @user.post forums(:default), new_topic(:default, @attributes).attributes
+    @profile.post forums(:default), new_topic(:default, @attributes).attributes
   end
 end
 
-describe User, "#post for users" do  
+describe Profile, "#post for profiles" do  
   include TopicCreatePostHelper
   
   it "ignores sticky bit" do
@@ -72,11 +72,11 @@ describe User, "#post for users" do
   end
 end
 
-describe User, "#post for moderators" do
+describe Profile, "#post for moderators" do
   include TopicCreatePostHelper
   
   before do
-    @user.stub!(:moderator_of?).and_return(true)
+    @profile.stub!(:moderator_of?).and_return(true)
   end
   
   it "sets sticky bit" do
@@ -96,7 +96,7 @@ describe User, "#post for admins" do
   include TopicCreatePostHelper
   
   before do
-    @user.admin = true
+    @profile.admin = true
   end
   
   it "sets sticky bit" do
@@ -119,18 +119,18 @@ module TopicUpdatePostHelper
     base.define_models
     
     base.before do
-      @user  = users(:default)
+      @profile  = profiles(:default)
       @topic = topics(:default)
       @attributes = {:body => 'booya'}
     end
   end
   
   def revise!
-    @user.revise @topic, @attributes
+    @profile.revise @topic, @attributes
   end
 end
 
-describe User, "#revise(topic) for users" do  
+describe User, "#revise(topic) for profiles" do  
   include TopicUpdatePostHelper
   
   it "ignores sticky bit" do

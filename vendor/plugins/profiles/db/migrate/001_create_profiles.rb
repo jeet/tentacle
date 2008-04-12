@@ -7,6 +7,7 @@ class CreateProfiles < ActiveRecord::Migration
       t.string :website
       t.string :about
       t.string :email
+      t.string :permalink
 
       t.timestamps
     end

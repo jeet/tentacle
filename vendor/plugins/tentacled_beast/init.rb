@@ -40,8 +40,7 @@ end
 # Some models have to be forcefully required
 # because of namespace type clashes
 require File.dirname(__FILE__) + "/app/models/group"
-require File.dirname(__FILE__) + "/app/models/user"
-
+require File.dirname(__FILE__) + "/app/models/profile"
 
 module Tentacle::Application::ForumMethods
   

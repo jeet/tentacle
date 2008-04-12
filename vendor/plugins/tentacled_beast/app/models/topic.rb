@@ -1,18 +1,18 @@
 class Topic < ActiveRecord::Base
-  include User::Editable
+  include Profile::Editable
 
   before_validation_on_create :set_default_attributes
   after_create   :create_initial_post
   before_update  :check_for_moved_forum
   after_update   :set_post_forum_id
-  before_destroy :count_user_posts_for_counter_cache
-  after_destroy  :update_cached_forum_and_user_counts
+  before_destroy :count_profile_posts_for_counter_cache
+  after_destroy  :update_cached_forum_and_profile_counts
 
   # creator of forum topic
-  belongs_to :user
+  belongs_to :profile
   
   # creator of recent post
-  belongs_to :last_user, :class_name => "User"
+  belongs_to :last_profile, :class_name => "Profile"
   
   belongs_to :forum, :counter_cache => true
   
@@ -22,12 +22,12 @@ class Topic < ActiveRecord::Base
   has_many :posts,       :order => "#{Post.table_name}.created_at", :dependent => :delete_all
   has_one  :recent_post, :order => "#{Post.table_name}.created_at DESC", :class_name => "Post"
   
-  has_many :voices, :through => :posts, :source => :user, :uniq => true
+  has_many :voices, :through => :posts, :source => :profile, :uniq => true
   
   has_many :monitorships, :dependent => :delete_all
-  has_many :monitoring_users, :through => :monitorships, :source => :user, :conditions => {"#{Monitorship.table_name}.active" => true}
+  has_many :monitoring_profiles, :through => :monitorships, :source => :profile, :conditions => {"#{Monitorship.table_name}.active" => true}
   
-  validates_presence_of :user_id, :forum_id, :title
+  validates_presence_of :profile_id, :forum_id, :title
   validates_presence_of :body, :on => :create
 
   attr_accessor :body
@@ -56,8 +56,8 @@ class Topic < ActiveRecord::Base
   def update_cached_post_fields(post)
     # these fields are not accessible to mass assignment
     if remaining_post = post.frozen? ? recent_post : post
-      self.class.update_all(['last_updated_at = ?, last_user_id = ?, last_post_id = ?, posts_count = ?', 
-        remaining_post.created_at, remaining_post.user_id, remaining_post.id, posts.count], ['id = ?', id])
+      self.class.update_all(['last_updated_at = ?, last_profile_id = ?, last_post_id = ?, posts_count = ?', 
+        remaining_post.created_at, remaining_post.profile_id, remaining_post.id, posts.count], ['id = ?', id])
     else
       self.destroy
     end
@@ -69,7 +69,7 @@ class Topic < ActiveRecord::Base
 
 protected
   def create_initial_post
-    user.reply self, @body unless locked?
+    profile.reply self, @body unless locked?
     @body = nil
   end
   
@@ -92,15 +92,15 @@ protected
     Forum.update_all "posts_count = posts_count + #{posts_count}", ['id = ?', forum_id]
   end
   
-  def count_user_posts_for_counter_cache
-    @user_posts = posts.group_by { |p| p.user_id }
+  def count_profile_posts_for_counter_cache
+    @profile_posts = posts.group_by { |p| p.profile_id }
   end
   
-  def update_cached_forum_and_user_counts
+  def update_cached_forum_and_profile_counts
     Forum.update_all "posts_count = posts_count - #{posts_count}", ['id = ?', forum_id]
     Group.update_all  "posts_count = posts_count - #{posts_count}", ['id = ?', group_id]
-    @user_posts.each do |user_id, posts|
-      User.update_all "posts_count = posts_count - #{posts.size}", ['id = ?', user_id]
+    @profile_posts.each do |profile_id, posts|
+      Profile.update_all "posts_count = posts_count - #{posts.size}", ['id = ?', profile_id]
     end
   end
 end

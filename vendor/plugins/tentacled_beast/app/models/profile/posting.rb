@@ -1,4 +1,4 @@
-class User
+class Profile
   # Creates new topic and post.
   # Only..
   #  - sets sticky/locked bits if you're a moderator or admin 
@@ -8,7 +8,7 @@ class User
     attributes.symbolize_keys!
     Topic.new(attributes) do |topic|
       topic.forum = forum
-      topic.user  = self
+      topic.profile  = self
       revise_topic topic, attributes
     end
   end
@@ -17,7 +17,7 @@ class User
     returning topic.posts.build(:body => body) do |post|
       post.group  = topic.group
       post.forum = topic.forum
-      post.user  = self
+      post.profile  = self
       post.save
     end
   end

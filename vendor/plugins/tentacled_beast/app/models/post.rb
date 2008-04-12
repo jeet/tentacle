@@ -1,10 +1,10 @@
 class Post < ActiveRecord::Base
-  include User::Editable
+  include Profile::Editable
   
   formats_attributes :body
 
   # author of post
-  belongs_to :user, :counter_cache => true
+  belongs_to :profile #, :counter_cache => true
   
   belongs_to :topic, :counter_cache => true
   
@@ -14,7 +14,7 @@ class Post < ActiveRecord::Base
   # topic's site (set by callback)
   belongs_to :group, :counter_cache => true
   
-  validates_presence_of :user_id, :topic_id, :forum_id, :body
+  validates_presence_of :profile_id, :topic_id, :forum_id, :body
   validate :topic_is_not_locked
 
   after_create  :update_cached_fields

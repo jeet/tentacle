@@ -73,12 +73,12 @@ describe PostsController, "GET #index (for users)" do
     @posts = []
     @user = users(:default)
     @user.stub!(:posts).and_return([])
-    @user.posts.stub!(:search).with('foo', :page => 5).and_return(@posts)
-    User.stub!(:find_by_permalink).with('1').and_return(@user)
-    User.stub!(:index_from).and_return { raise("Nooooo") }
+    @profile.posts.stub!(:search).with('foo', :page => 5).and_return(@posts)
+    Profile.stub!(:find_by_permalink).with('1').and_return(@profile)
+    Profile.stub!(:index_from).and_return { raise("Nooooo") }
   end
 
-  it_assigns :posts, :user, :forum => nil, :topic => nil, :parent => lambda { @user }
+  it_assigns :posts, :profile, :forum => nil, :topic => nil, :parent => lambda { @profile }
   it_renders :template, :index
 
   describe PostsController, "(xml)" do

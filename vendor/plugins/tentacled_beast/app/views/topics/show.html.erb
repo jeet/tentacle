@@ -1,12 +1,12 @@
 <% @page_title = @topic.title %>
-<% @monitoring = logged_in? && !Monitorship.count(:id, :conditions => ['user_id = ? and topic_id = ? and active = ?', current_user.id, @topic.id, true]).zero? %>
+<% @monitoring = logged_in? && !Monitorship.count(:id, :conditions => ['profile_id = ? and topic_id = ? and active = ?', current_profile.id, @topic.id, true]).zero? %>
 
-<% content_for :right do -%>
+<% content_for :sidebar do -%>
 
 <h5><%= 'Voices'[:voices_title] %></h5>
 <ul class="flat talking">
-<% @topic.voices.each do | user | %>
-  <li><%= link_to h(user.display_name), user_path(user) %></li>
+<% @topic.voices.each do | profile | %>
+  <li><%= link_to h(profile.display_name), profile_path(profile) %></li>
 <% end %>
 </ul>
 
@@ -49,7 +49,7 @@
   <% end %>
   <% if logged_in? %>
     <span style="display:none;" id="topic_mod">
-      <% if @topic.editable_by?(current_user) -%>
+      <% if @topic.editable_by?(current_profile) -%>
         <%= link_to('edit'[], edit_forum_topic_path(@forum, @topic), :class => "utility") %> |
         <%= link_to('delete'[], forum_topic_path(@forum, @topic), :class => "utility", :method => :delete, :confirm => 'Delete this topic forever?'[:delete_topic_conf]) %>
       <% end -%>
@@ -86,23 +86,23 @@
       </a>
     </div>
 
-    <%= avatar_for post.user %>
-    <span class="fn"><%= link_to truncate(h(post.user.display_name), 15), user_path(post.user), :class => (post.user == @posts.first.user ? "threadauthor" : nil) %></span>
-    <% if post.user.admin? || post.forum.moderators.include?(post.user) || !post.user.active? %>
+    <%= avatar_for post.profile %>
+    <span class="fn"><%= link_to truncate(h(post.profile.display_name), 15), profile_path(post.profile), :class => (post.profile == @posts.first.profile ? "threadauthor" : nil) %></span>
+    <% if post.profile.admin? || post.forum.moderators.include?(post.profile) || !post.profile.active? %>
     <span class="admin">
-      <% if post.user.admin? %>
+      <% if post.profile.admin? %>
       <%= 'Administator'[:administrator_title] %>
-      <% elsif post.forum.moderators.include?(post.user) %>
+      <% elsif post.forum.moderators.include?(post.profile) %>
       <%= 'Moderator'[:moderator_title] %>
-      <% elsif post.user.suspended? %>
-      <%=h post.user.state  %>
+      <% elsif post.profile.suspended? %>
+      <%=h post.profile.state  %>
       <% end %>
     </span>
     <% end %>
-    <span class="posts"><%= '{count} post(s)'[(count=post.user.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></span>
+    <span class="posts"><%= '{count} post(s)'[(count=post.profile.posts.size)==1 ? :post_count : :posts_count, number_with_delimiter(count)] %></span>
 
 
-    <% if logged_in? && post.editable_by?(current_user) -%>
+    <% if logged_in? && post.editable_by?(current_profile) -%>
     <p>
       <span class="edit">
         <%= ajax_spinner_for "edit-post-#{post.id}", "spinner_bounce.gif" %>
@@ -117,10 +117,10 @@
 <!--
     <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply'), "$('reply').toggle()" if logged_in? %>
 -->
-      <% if post.user.active? %>
+      <% if post.profile.active? %>
         <%= post.body_html %>
       <% else %>
-        <p><% "(This post has been removed)"[:suspended_user_post] %></p>
+        <p><% "(This post has been removed)"[:suspended_profile_post] %></p>
       <% end %>
   </td>
 </tr>

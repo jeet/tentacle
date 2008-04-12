@@ -5,8 +5,8 @@
 
 
 <h1 id="new_topic"><%= 'New Topic'[] %></h1>
-<p class="subtitle"><%= 'by {user}'[:by_user, current_user.display_name] %></p>
-
+<p class="subtitle"><%#= 'by {user}'[:by_user, current_profile.display_name] %></p>
+<%#=h current_profile.display_name %>
 
 <%= error_messages_for :topic %>
 <% form_for :topic,

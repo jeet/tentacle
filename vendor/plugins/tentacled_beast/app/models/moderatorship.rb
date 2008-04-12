@@ -1,20 +1,20 @@
 class Moderatorship < ActiveRecord::Base
-  belongs_to :user
+  belongs_to :profile
   belongs_to :forum
-  validates_presence_of :user_id, :forum_id
+  validates_presence_of :profile_id, :forum_id
   validate :uniqueness_of_relationship
-  validate :user_and_forum_in_same_group
+  validate :profile_and_forum_in_same_group
   
 protected
   def uniqueness_of_relationship
-    if self.class.exists?(:user_id => user_id, :forum_id => forum_id)
-      errors.add_to_base("Cannot add duplicate user/forum relation")
+    if self.class.exists?(:profile_id => profile_id, :forum_id => forum_id)
+      errors.add_to_base("Cannot add duplicate profile/forum relation")
     end
   end
   
-  def user_and_forum_in_same_group
-    unless user.group_id == forum.group_id
-      errors.add_to_base("User and Forum must be in the same Group.")
+  def profile_and_forum_in_same_group
+    unless profile.group_id == forum.group_id
+      errors.add_to_base("Profile and Forum must be in the same Group.")
     end
   end
 end

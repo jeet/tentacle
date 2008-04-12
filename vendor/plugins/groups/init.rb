@@ -6,7 +6,7 @@ Rails.plugin_routes << :groups
 Profile.has_many :memberships
 
 # Some models have to be forcefully required
-# require File.dirname(__FILE__) + "/app/models/group"
+require File.dirname(__FILE__) + "/app/models/group"
 
 module Tentacle::Application::GroupMethods
   

@@ -1,12 +1,7 @@
-require_dependency 'user'
-unless defined?(User)
-  $stderr.puts "Defining User"
-  class User < ActiveRecord::Base
-  end
-end
-
-class User
-  concerned_with :validation, :states, :activation, :posting
+require_dependency 'profile'
+class Profile
+  #concerned_with :validation, :states, :activation, :posting
+  concerned_with :posting
   
   has_many :posts, :order => "#{Post.table_name}.created_at desc"
   has_many :topics, :order => "#{Topic.table_name}.created_at desc"
@@ -17,12 +12,12 @@ class User
   has_many :monitorships, :dependent => :delete_all
   has_many :monitored_topics, :through => :monitorships, :source => :topic, :conditions => {"#{Monitorship.table_name}.active" => true}
   
-  has_permalink :login
+  # has_permalink :login
   
-  attr_readonly :posts_count, :last_seen_at
+  attr_readonly :last_seen_at #, posts_count
 
   def self.prefetch_from(records)
-    find(:all, :select => 'distinct *', :conditions => ['id in (?)', records.collect(&:user_id).uniq])
+    find(:all, :select => 'distinct *', :conditions => ['id in (?)', records.collect(&:profile_id).uniq])
   end
   
   def self.index_from(records)
@@ -33,22 +28,26 @@ class User
     @available_forums ||= group.ordered_forums - forums
   end
 
-  def moderator_of?(forum)
-    admin? || Moderatorship.exists?(:user_id => id, :forum_id => forum.id)
+  def admin?
+    user.admin?
   end
 
-  def display_name
-    n = read_attribute(:login)
+  def moderator_of?(forum)
+    admin? || Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)
   end
+
+  #def display_name
+  #  n = read_attribute(:login)
+  #end
   
-  # this is used to keep track of the last time a user has been seen (reading a topic)
+  # this is used to keep track of the last time a profile has been seen (reading a topic)
   # it is used to know when topics are new or old and which should have the green
   # activity light next to them
   #
-  # we cheat by not calling it all the time, but rather only when a user views a topic
+  # we cheat by not calling it all the time, but rather only when a profile views a topic
   # which means it isn't truly "last seen at" but it does serve it's intended purpose
   #
-  # This is now also used to show which users are online... not at accurate as the
+  # This is now also used to show which profiles are online... not at accurate as the
   # session based approach, but less code and less overhead.
   def seen!
     now = Time.now.utc
