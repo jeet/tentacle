@@ -1,4 +1,11 @@
-class User < ActiveRecord::Base
+require_dependency 'user'
+unless defined?(User)
+  $stderr.puts "Defining User"
+  class User < ActiveRecord::Base
+  end
+end
+
+class User
   concerned_with :validation, :states, :activation, :posting
   
   has_many :posts, :order => "#{Post.table_name}.created_at desc"

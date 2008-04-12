@@ -1,4 +1,7 @@
 module Tentacle
+  module Application
+  end
+
   class Version
     attr_reader :major, :minor, :tiny
     

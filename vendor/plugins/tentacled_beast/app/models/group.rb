@@ -1,4 +1,10 @@
-class Group < ActiveRecord::Base
+require_dependency 'group'
+unless defined?(Group)
+  class Group < ActiveRecord::Base
+  end
+end
+
+class Group
   has_many :users, :conditions => {:state => 'active'}
   has_many :all_users, :class_name => 'User'
   

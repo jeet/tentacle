@@ -3,6 +3,11 @@ class ApplicationController < ActionController::Base
   helper_method :logged_in?, :current_user, :admin?, :controller_path, :hosted_url, :hosted_url_for
   
   session(Tentacle.session_options) unless Tentacle.domain.blank?
+
+  Tentacle::Application.constants.each do |sub|
+    $stderr.puts "Including #{sub}"
+    include "Tentacle::Application::#{sub}".constantize
+  end
   
   around_filter :set_context
   
@@ -92,27 +97,6 @@ class ApplicationController < ActionController::Base
       redirect_to installer_path
     end
 
-  if USE_REPO_PATHS
-    def repository_subdomain
-      @repository_subdomain ||= params.delete(:repo)
-    end
-
-    def hosted_url(*args)
-      repository, name = extract_repository_and_args(args)
-      hosted_url_for repository, send("#{name}_path", *args)
-    end
-    
-    def hosted_url_for(repository, *args)
-      unless repository.is_a?(Repository) || repository.nil?
-        args.unshift repository
-        repository = nil
-      end
-      repository ||= current_repository
-      returning url_for(*args) do |path|
-        path.insert 0, "/#{repository.subdomain}" if repository
-      end
-    end
-  else
     def hosted_url(*args)
       repository, name = extract_repository_and_args(args)
       if repository.nil?
@@ -131,7 +115,6 @@ class ApplicationController < ActionController::Base
       args.unshift repository unless repository.is_a?(Repository) || repository.nil?
       url_for(*args)
     end
-  end
     
     def extract_repository_and_args(args)
       if args.first.is_a?(Symbol)

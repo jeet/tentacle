@@ -128,7 +128,7 @@ require "engines/plugin/migrator"
 #
 module Engines::RailsExtensions::Migrations
   def self.included(base) # :nodoc:
-    base.class_eval { alias_method_chain :initialize_schema_information, :engine_additions }
+    # base.class_eval { alias_method_chain :initialize_schema_information, :engine_additions }
   end
 
   # Create the schema tables, and ensure that the plugin schema table

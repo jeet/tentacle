@@ -1,4 +1,10 @@
-class Group < ActiveRecord::Base
+unless defined?(Group)
+  $stderr.puts "Defining group 2"
+  class Group < ActiveRecord::Base
+  end
+end
+
+class Group
   has_many :memberships
   has_many :members, :class_name => 'Profile', :through => :memberships
   
