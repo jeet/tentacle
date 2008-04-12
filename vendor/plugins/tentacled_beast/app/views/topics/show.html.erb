@@ -86,9 +86,9 @@
       </a>
     </div>
 
-    <%= avatar_for post.profile %>
+    <%# = avatar_for post.profile %>
     <span class="fn"><%= link_to truncate(h(post.profile.display_name), 15), profile_path(post.profile), :class => (post.profile == @posts.first.profile ? "threadauthor" : nil) %></span>
-    <% if post.profile.admin? || post.forum.moderators.include?(post.profile) || !post.profile.active? %>
+    <% if post.profile.admin? || post.forum.moderators.include?(post.profile) #|| !post.profile.active? %>
     <span class="admin">
       <% if post.profile.admin? %>
       <%= 'Administator'[:administrator_title] %>
@@ -117,7 +117,7 @@
 <!--
     <%= link_to_function image_tag('clearbits/comment.gif', :class => 'icon reply'), "$('reply').toggle()" if logged_in? %>
 -->
-      <% if post.profile.active? %>
+      <% if post.profile #.active? %>
         <%= post.body_html %>
       <% else %>
         <p><% "(This post has been removed)"[:suspended_profile_post] %></p>

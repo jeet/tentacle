@@ -19,7 +19,7 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html do
         if logged_in?
-          current_profile.seen!
+          # current_profile.seen! # todo
           (session[:topics] ||= {})[@topic.id] = Time.now.utc
         end
         
