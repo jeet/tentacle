@@ -4223,3 +4223,705 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
 /*--------------------------------------------------------------------------*/
 
 Element.addMethods();
+
+// LowPro by Dan Webb (http://danwebb.net)
+// I just ripped out the parts I don't need with the newer version of Protoype, feel free to 
+// steal this file for your own use.  
+// Extends Event to add onReady and addBehavior 
+//
+Object.extend(Event, {
+  _domReady : function() {
+    if (arguments.callee.done) return;
+    arguments.callee.done = true;
+
+    if (Event._timer)  clearInterval(Event._timer);
+    
+    Event._readyCallbacks.each(function(f) { f() });
+    Event._readyCallbacks = null;
+    
+  },
+  onReady : function(f) {
+    if (!this._readyCallbacks) {
+      var domReady = this._domReady;
+      
+      if (domReady.done) return f();
+      
+      if (document.addEventListener)
+        document.addEventListener("DOMContentLoaded", domReady, false);
+        
+        /*@cc_on @*/
+        /*@if (@_win32)
+            var dummy = location.protocol == "https:" ?  "https://javascript:void(0)" : "javascript:void(0)";
+            document.write("<script id=__ie_onload defer src='" + dummy + "'><\/script>");
+            document.getElementById("__ie_onload").onreadystatechange = function() {
+                if (this.readyState == "complete") { domReady(); }
+            };
+        /*@end @*/
+        
+        if (/WebKit/i.test(navigator.userAgent)) { 
+          this._timer = setInterval(function() {
+            if (/loaded|complete/.test(document.readyState)) domReady(); 
+          }, 10);
+        }
+        
+        Event.observe(window, 'load', domReady);
+        Event._readyCallbacks =  [];
+    }
+    Event._readyCallbacks.push(f);
+  }
+});
+
+Event.addBehavior = function(rules) {
+  var ab = this.addBehavior;
+  Object.extend(ab.rules, rules);
+  
+  if (!ab.responderApplied) {
+    Ajax.Responders.register({
+      onComplete : function() { 
+        if (Event.addBehavior.reassignAfterAjax) 
+          setTimeout(function() { ab.unload(); ab.load(ab.rules) }, 10);
+      }
+    });
+    ab.responderApplied = true;
+  }
+  
+  if (ab.autoTrigger) {
+    this.onReady(ab.load.bind(ab, rules));
+  }
+  
+};
+
+Object.extend(Event.addBehavior, {
+  rules : {}, cache : [],
+  reassignAfterAjax : true,
+  autoTrigger : true,
+  
+  load : function(rules) {
+    for (var selector in rules) {
+      var observer = rules[selector];
+      var sels = selector.split(',');
+      sels.each(function(sel) {
+        var parts = sel.split(/:(?=[a-z]+$)/), css = parts[0], event = parts[1];
+        $$(css).each(function(element) {
+          if (event) {
+            $(element).observe(event, observer);
+            Event.addBehavior.cache.push([element, event, observer]);
+          } else {
+            if (!element.$$assigned || !element.$$assigned.include(observer)) {
+              if (observer.attach) observer.attach(element);
+              
+              else observer.call($(element));
+              element.$$assigned = element.$$assigned || [];
+              element.$$assigned.push(observer);
+            }
+          }
+        });
+      });
+    }
+  },
+  
+  unload : function() {
+    this.cache.each(function(c) {
+      Event.stopObserving.apply(Event, c);
+    });
+    this.cache = [];
+  }
+  
+});
+
+Event.observe(window, 'unload', Event.addBehavior.unload.bind(Event.addBehavior));
+
+//(c) 2006 Valerio Proietti (http://mad4milk.net). MIT-style license.
+//moo.fx.js - depends on prototype.js OR prototype.lite.js
+//version 2.0
+
+var Fx = fx = {};
+
+Fx.Base = function(){};
+Fx.Base.prototype = {
+
+	setOptions: function(options){
+		this.options = Object.extend({
+			onStart: function(){},
+			onComplete: function(){},
+			transition: Fx.Transitions.sineInOut,
+			duration: 500,
+			unit: 'px',
+			wait: true,
+			fps: 50
+		}, options || {});
+	},
+
+	step: function(){
+		var time = new Date().getTime();
+		if (time < this.time + this.options.duration){
+			this.cTime = time - this.time;
+			this.setNow();
+		} else {
+			setTimeout(this.options.onComplete.bind(this, this.element), 10);
+			this.clearTimer();
+			this.now = this.to;
+		}
+		this.increase();
+	},
+
+	setNow: function(){
+		this.now = this.compute(this.from, this.to);
+	},
+
+	compute: function(from, to){
+		var change = to - from;
+		return this.options.transition(this.cTime, from, change, this.options.duration);
+	},
+
+	clearTimer: function(){
+		clearInterval(this.timer);
+		this.timer = null;
+		return this;
+	},
+
+	_start: function(from, to){
+		if (!this.options.wait) this.clearTimer();
+		if (this.timer) return;
+		setTimeout(this.options.onStart.bind(this, this.element), 10);
+		this.from = from;
+		this.to = to;
+		this.time = new Date().getTime();
+		this.timer = setInterval(this.step.bind(this), Math.round(1000/this.options.fps));
+		return this;
+	},
+
+	custom: function(from, to){
+		return this._start(from, to);
+	},
+
+	set: function(to){
+		this.now = to;
+		this.increase();
+		return this;
+	},
+
+	hide: function(){
+		return this.set(0);
+	},
+
+	setStyle: function(e, p, v){
+		if (p == 'opacity'){
+			if (v == 0 && e.style.visibility != "hidden") e.style.visibility = "hidden";
+			else if (e.style.visibility != "visible") e.style.visibility = "visible";
+			if (window.ActiveXObject) e.style.filter = "alpha(opacity=" + v*100 + ")";
+			e.style.opacity = v;
+		} else e.style[p] = v+this.options.unit;
+	}
+
+};
+
+Fx.Style = Class.create();
+Fx.Style.prototype = Object.extend(new Fx.Base(), {
+
+	initialize: function(el, property, options){
+		this.element = $(el);
+		this.setOptions(options);
+		this.property = property.camelize();
+	},
+
+	increase: function(){
+		this.setStyle(this.element, this.property, this.now);
+	}
+
+});
+
+Fx.Styles = Class.create();
+Fx.Styles.prototype = Object.extend(new Fx.Base(), {
+
+	initialize: function(el, options){
+		this.element = $(el);
+		this.setOptions(options);
+		this.now = {};
+	},
+
+	setNow: function(){
+		for (p in this.from) this.now[p] = this.compute(this.from[p], this.to[p]);
+	},
+
+	custom: function(obj){
+		if (this.timer && this.options.wait) return;
+		var from = {};
+		var to = {};
+		for (p in obj){
+			from[p] = obj[p][0];
+			to[p] = obj[p][1];
+		}
+		return this._start(from, to);
+	},
+
+	increase: function(){
+		for (var p in this.now) this.setStyle(this.element, p, this.now[p]);
+	}
+
+});
+
+//Transitions (c) 2003 Robert Penner (http://www.robertpenner.com/easing/), BSD License.
+
+Fx.Transitions = {
+	linear: function(t, b, c, d) { return c*t/d + b; },
+	sineInOut: function(t, b, c, d) { return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b; }
+};
+
+//moo.fx.transitions.js - depends on prototype.js or prototype.lite.js + moo.fx.js
+//Author: Robert Penner, <http://www.robertpenner.com/easing/>, modified to be used with mootools.
+//License: Easing Equations v1.5, (c) 2003 Robert Penner, all rights reserved. Open Source BSD License.
+
+Fx.Transitions = {
+
+	linear: function(t, b, c, d){
+		return c*t/d + b;
+	},
+
+	quadIn: function(t, b, c, d){
+		return c*(t/=d)*t + b;
+	},
+
+	quadOut: function(t, b, c, d){
+		return -c *(t/=d)*(t-2) + b;
+	},
+
+	quadInOut: function(t, b, c, d){
+		if ((t/=d/2) < 1) return c/2*t*t + b;
+		return -c/2 * ((--t)*(t-2) - 1) + b;
+	},
+
+	cubicIn: function(t, b, c, d){
+		return c*(t/=d)*t*t + b;
+	},
+
+	cubicOut: function(t, b, c, d){
+		return c*((t=t/d-1)*t*t + 1) + b;
+	},
+
+	cubicInOut: function(t, b, c, d){
+		if ((t/=d/2) < 1) return c/2*t*t*t + b;
+		return c/2*((t-=2)*t*t + 2) + b;
+	},
+
+	quartIn: function(t, b, c, d){
+		return c*(t/=d)*t*t*t + b;
+	},
+
+	quartOut: function(t, b, c, d){
+		return -c * ((t=t/d-1)*t*t*t - 1) + b;
+	},
+
+	quartInOut: function(t, b, c, d){
+		if ((t/=d/2) < 1) return c/2*t*t*t*t + b;
+		return -c/2 * ((t-=2)*t*t*t - 2) + b;
+	},
+
+	quintIn: function(t, b, c, d){
+		return c*(t/=d)*t*t*t*t + b;
+	},
+
+	quintOut: function(t, b, c, d){
+		return c*((t=t/d-1)*t*t*t*t + 1) + b;
+	},
+
+	quintInOut: function(t, b, c, d){
+		if ((t/=d/2) < 1) return c/2*t*t*t*t*t + b;
+		return c/2*((t-=2)*t*t*t*t + 2) + b;
+	},
+
+	sineIn: function(t, b, c, d){
+		return -c * Math.cos(t/d * (Math.PI/2)) + c + b;
+	},
+
+	sineOut: function(t, b, c, d){
+		return c * Math.sin(t/d * (Math.PI/2)) + b;
+	},
+
+	sineInOut: function(t, b, c, d){
+		return -c/2 * (Math.cos(Math.PI*t/d) - 1) + b;
+	},
+
+	expoIn: function(t, b, c, d){
+		return (t==0) ? b : c * Math.pow(2, 10 * (t/d - 1)) + b;
+	},
+
+	expoOut: function(t, b, c, d){
+		return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+	},
+
+	expoInOut: function(t, b, c, d){
+		if (t==0) return b;
+		if (t==d) return b+c;
+		if ((t/=d/2) < 1) return c/2 * Math.pow(2, 10 * (t - 1)) + b;
+		return c/2 * (-Math.pow(2, -10 * --t) + 2) + b;
+	},
+
+	circIn: function(t, b, c, d){
+		return -c * (Math.sqrt(1 - (t/=d)*t) - 1) + b;
+	},
+
+	circOut: function(t, b, c, d){
+		return c * Math.sqrt(1 - (t=t/d-1)*t) + b;
+	},
+
+	circInOut: function(t, b, c, d){
+		if ((t/=d/2) < 1) return -c/2 * (Math.sqrt(1 - t*t) - 1) + b;
+		return c/2 * (Math.sqrt(1 - (t-=2)*t) + 1) + b;
+	},
+
+	elasticIn: function(t, b, c, d, a, p){
+		if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3; if (!a) a = 1;
+		if (a < Math.abs(c)){ a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin(c/a);
+		return -(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+	},
+
+	elasticOut: function(t, b, c, d, a, p){
+		if (t==0) return b; if ((t/=d)==1) return b+c; if (!p) p=d*.3; if (!a) a = 1;
+		if (a < Math.abs(c)){ a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin(c/a);
+		return a*Math.pow(2,-10*t) * Math.sin( (t*d-s)*(2*Math.PI)/p ) + c + b;
+	},
+
+	elasticInOut: function(t, b, c, d, a, p){
+		if (t==0) return b; if ((t/=d/2)==2) return b+c; if (!p) p=d*(.3*1.5); if (!a) a = 1;
+		if (a < Math.abs(c)){ a=c; var s=p/4; }
+		else var s = p/(2*Math.PI) * Math.asin(c/a);
+		if (t < 1) return -.5*(a*Math.pow(2,10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )) + b;
+		return a*Math.pow(2,-10*(t-=1)) * Math.sin( (t*d-s)*(2*Math.PI)/p )*.5 + c + b;
+	},
+
+	backIn: function(t, b, c, d, s){
+		if (!s) s = 1.70158;
+		return c*(t/=d)*t*((s+1)*t - s) + b;
+	},
+
+	backOut: function(t, b, c, d, s){
+		if (!s) s = 1.70158;
+		return c*((t=t/d-1)*t*((s+1)*t + s) + 1) + b;
+	},
+
+	backInOut: function(t, b, c, d, s){
+		if (!s) s = 1.70158;
+		if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
+		return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
+	},
+
+	bounceIn: function(t, b, c, d){
+		return c - Fx.Transitions.bounceOut (d-t, 0, c, d) + b;
+	},
+
+	bounceOut: function(t, b, c, d){
+		if ((t/=d) < (1/2.75)){
+			return c*(7.5625*t*t) + b;
+		} else if (t < (2/2.75)){
+			return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+		} else if (t < (2.5/2.75)){
+			return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+		} else {
+			return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+		}
+	},
+
+	bounceInOut: function(t, b, c, d){
+		if (t < d/2) return Fx.Transitions.bounceIn(t*2, 0, c, d) * .5 + b;
+		return Fx.Transitions.bounceOut(t*2-d, 0, c, d) * .5 + c*.5 + b;
+	}
+
+};
+
+var Tentacle = {
+	root: ''
+}
+
+Permissions = {
+  removeMember: function(user_id) {
+    if(!confirm("Are you sure you wish to remove this member?")) return
+    if(user_id == 'anon')
+      new Ajax.Request(Tentacle.root + "/admin/permissions/anon", {method:'delete'});
+    else
+      new Ajax.Request(Tentacle.root + "/admin/users/" + user_id + "/permissions", {method:'delete'});
+  },
+  
+  remove: function(line) {
+    if(line.readAttribute('id')) {
+      if(!confirm("Are you sure you wish to remove this permission?")) return;
+      new Ajax.Request(Tentacle.root + "/admin/permissions/" + line.readAttribute('id').match(/(\d+)$/)[0], {method:'delete'});
+    } else {
+      line.remove();
+    }
+  },
+  
+  add: function(line) {
+    var index   = line.parentNode.getElementsByTagName('p').length
+    var newline = $(line).duplicate();
+    var newsel  = newline.down('select');
+    var newpath = newline.down('input');
+    var newid   = newline.down('input', 1);
+    newpath.value = '';
+    newpath.writeAttribute('id', 'permission_paths_' + index + '_path')
+    newpath.writeAttribute('name', 'permission[paths][' + index + '][path]')
+    newsel.writeAttribute('name', 'permission[paths][' + index + '][full_access]')
+    if(newid) newid.remove();
+    
+    if(!Prototype.Browser.IE) {
+      Event.addBehavior.unload(); 
+      Event.addBehavior.load(Event.addBehavior.rules)
+    }
+  }
+};
+
+var Importer = Class.create();
+Importer.prototype = {
+  initialize: function(repoid, options) {
+    this.repoId = repoid;
+    this.options = $H({
+      onImported: Prototype.emptyFunction,
+      onStep: Prototype.emptyFunction,
+      startProgress: 0
+    }).merge(options || {});
+    this.firstRun = true;
+  },
+  
+  step: function(progress) {
+    if(this.firstRun) progress = this.options.get('startProgress');
+    if(progress < 100) {
+      new Ajax.Request(Tentacle.root + '/admin/repositories/' + this.repoId + '/sync', {
+        method: 'post',
+        onSuccess: function(transport) {
+          this.firstRun = false;
+          var prog = transport.responseText;
+          this.step(prog);
+          this.options.get('onStep').call(this, prog);
+        }.bind(this),
+        
+        on500: function() {
+          $('import-progress').update('A 500 error occurred, please check your logs');
+        }
+      });
+    } else {
+      this.options.get('onImported').call(this);
+    }
+  }
+}
+
+Element.addMethods({
+  duplicate: function(element) {
+    element = $(element);    
+    var clone = element.cloneNode(true);
+    element.parentNode.appendChild(clone);
+    return clone;
+  }
+});
+
+// Create OSX-style Sheets  
+var Sheet = Class.create();
+Sheet.Cache = [];
+Sheet.Current = null;
+Sheet.prototype = {
+  initialize: function(element, trigger, options) {
+    this.sheet = $(element);
+    if(!this.sheet) return;
+    this.sheetHeight = this.sheet.getHeight();
+    this.cancelBtn = this.sheet.down('.cancelbtn');    
+    this.trigger = trigger;
+    this.overlay;
+    this.build(element);
+    this.addObservers();
+  },
+  
+  addObservers: function() {
+    [this.trigger].flatten().each(function(t) {
+      $(t).observe('click', this.toggle.bind(this));
+    }.bind(this));
+    this.cancelBtn.observe('click', this.hide.bind(this));
+  },
+  
+  toggle: function(event) {
+    event.stop();
+    if(this.overlay.visible())
+      this.hide();
+    else 
+      this.show();
+  },
+  
+  hide: function(event) {
+    if(event) event.stop();
+    new Fx.Style(this.sheetContent, 'margin-top', {
+      duration: (this.sheetHeight * 2) + 500,
+      transition: Fx.Transitions.expoOut,
+      onComplete: function() { this.overlay.hide(); }.bind(this)
+    })._start(0, -(this.sheet.getHeight()));    
+  },
+  
+  show: function(event) {
+    if(Sheet.Current && Sheet.Current.overlay.visible()) Sheet.Current.hide();
+    Sheet.Current = this;
+    Sheet.Current.overlay.show();
+    this.sheet.show();
+    new Fx.Style(this.sheetContent, 'margin-top', {
+      duration: (this.sheetHeight * 2), 
+      transition: Fx.Transitions.expoOut
+    })._start(-(this.sheetHeight), 0);
+  },
+  
+  build: function(namespace) {
+    this.overlay = new Element('div', {id: namespace + '-overlay'});
+    this.overlay.hide();
+    // Firefox wiggles the text if this is `fixed` so we make it absolute to prevent
+    // it from turning the page into water.  Not as useful as Safari and IE 7, but it 
+    // works good.
+    var IE7 = navigator.userAgent.indexOf('MSIE 7') > -1
+    if(!Prototype.Browser.WebKit && !IE7)
+      this.overlay.setStyle({position: 'absolute'});
+
+    this.sheetContent = new Element('div', {id: namespace + '-content'});
+    this.overlay.addClassName('overlay');
+    this.sheetContent.addClassName('overlay-content');
+    this.sheetContent.appendChild(this.sheet);
+    this.overlay.appendChild(this.sheetContent);
+    this.sheetContent.setStyle({marginTop: -(this.sheetHeight) + "px"});
+    $('container').appendChild(this.overlay);
+  }
+};
+
+// http://redhanded.hobix.com/inspect/showingPerfectTime.html
+/* other support functions -- thanks, ecmanaut! */
+var strftime_funks = {
+  zeropad: function( n ){ return n > 9 ? n : '0' + n; },
+  a: function(t) { return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][t.getDay()] },
+  A: function(t) { return ['Sunday','Monday','Tuedsay','Wednesday','Thursday','Friday','Saturday'][t.getDay()] },
+  b: function(t) { return ['Jan','Feb','Mar','Apr','May','Jun', 'Jul','Aug','Sep','Oct','Nov','Dec'][t.getMonth()] },
+  B: function(t) { return ['January','February','March','April','May','June', 'July','August',
+      'September','October','November','December'][t.getMonth()] },
+  c: function(t) { return t.toString() },
+  d: function(t) { return this.zeropad(t.getDate()) },
+  H: function(t) { return this.zeropad(t.getHours()) },
+  I: function(t) { return this.zeropad((t.getHours() + 12) % 12) },
+  m: function(t) { return this.zeropad(t.getMonth()+1) }, // month-1
+  M: function(t) { return this.zeropad(t.getMinutes()) },
+  p: function(t) { return this.H(t) < 12 ? 'AM' : 'PM'; },
+  S: function(t) { return this.zeropad(t.getSeconds()) },
+  w: function(t) { return t.getDay() }, // 0..6 == sun..sat
+  y: function(t) { return this.zeropad(this.Y(t) % 100); },
+  Y: function(t) { return t.getFullYear() },
+  '%': function(t) { return '%' }
+};
+
+Date.prototype.strftime = function (fmt) {
+    var t = this;
+    for (var s in strftime_funks) {
+        if (s.length == 1 )
+            fmt = fmt.replace('%' + s, strftime_funks[s](t));
+    }
+    return fmt;
+};
+
+// http://twitter.pbwiki.com/RelativeTimeScripts
+Date.distanceOfTimeInWords = function(fromTime, toTime, includeTime) {
+  var delta = parseInt((toTime.getTime() - fromTime.getTime()) / 1000);
+  if(delta < 60) {
+      return 'less than a minute ago';
+  } else if(delta < 120) {
+      return 'about a minute ago';
+  } else if(delta < (45*60)) {
+      return (parseInt(delta / 60)).toString() + ' minutes ago';
+  } else if(delta < (120*60)) {
+      return 'about an hour ago';
+  } else if(delta < (24*60*60)) {
+      return 'about ' + (parseInt(delta / 3600)).toString() + ' hours ago';
+  } else if(delta < (48*60*60)) {
+      return '1 day ago';
+  } else {
+    var days = (parseInt(delta / 86400)).toString();
+    if(days > 30) {
+      var fmt  = '%B %d'
+      if(toTime.getYear() != fromTime.getYear()) { fmt += ', %Y' }
+      if(includeTime) fmt += ' %I:%M %p'
+      return fromTime.strftime(fmt);
+    } else {
+      return days + " days ago"
+    }
+  }
+}
+
+Date.prototype.timeAgoInWords = function() {
+  var relative_to = (arguments.length > 0) ? arguments[1] : new Date();
+  return Date.distanceOfTimeInWords(this, relative_to, arguments[2]);
+}
+
+// for those times when you get a UTC string like 18 May 09:22 AM
+Date.parseUTC = function(value) {
+  var localDate = new Date(value);
+  var utcSeconds = Date.UTC(localDate.getFullYear(), localDate.getMonth(), localDate.getDate(), localDate.getHours(), localDate.getMinutes(), localDate.getSeconds())
+  return new Date(utcSeconds);
+}
+
+Event.addBehavior({
+  
+  'a.addpath:click': function(event) {
+    var a = Event.findElement(event, 'a');
+    Permissions.add(a.up());
+    return false;
+  },
+  
+  'a.delpath:click': function() {
+    Permissions.remove(this.up());
+  },
+  
+  'a#as-toggle:click': function(event) {
+    Event.stop(event);
+    var as = $('advanced-settings'); as.toggle();
+    as.visible() ? this.update('Fewer settings&hellip;') : this.update('More settings&hellip;')
+  },
+  
+  '#settings-mail-type:change': function() {
+    if($F(this) == 'smtp') {
+      $('mail-sendmail').hide();
+      $('mail-smtp').show();
+    } else {
+      $('mail-smtp').hide();
+      $('mail-sendmail').show();
+    }
+  },
+  
+  '#detail-view:click, #list-view:click': function() {
+    if(this.id == 'list-view') {
+      $('changesets').addClassName('list-view');
+    } else {
+      $('changesets').removeClassName('list-view');
+    }
+  },
+  
+  '#diff-with:change': function(event) {
+    var activeValues = ['head', 'prev', 'next'];
+    var curValue = $F(this);
+    if(activeValues.include(curValue)) {
+      $('diff-form').submit();
+    } else {
+      $('diff-submit').show();
+      if(curValue == 'date') {
+        $('diff-num').hide();
+        $('diff-date').show();
+      } else if(curValue == 'numb') {
+        $('diff-date').hide();
+        $('diff-num').show();
+    }
+  }
+}
+});
+
+document.observe('dom:loaded', function() {
+   $$('span.time').each(function(span) {
+     span.update(Date.parseUTC(span.innerHTML).timeAgoInWords());
+   });
+
+   var blame = $('blame');
+   if(blame) {
+     blame.observe('click', function(event) {
+       event.stop();
+       $("source-code").toggleClassName("noblame");
+     });
+   }
+});
