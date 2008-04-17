@@ -1,0 +1,28 @@
+#content h1 {
+  font-size: 200%;
+  line-height: 1.2em;
+}
+
+table.wide { 
+  width:100%;
+  margin: 10px 0;
+}
+
+td,th {
+  padding: 5px;
+  border: 1px solid #eee;
+  background-color: white;
+}
+
+th {
+  background-color: #444;
+  color: white;
+}
+
+td.author {
+  width: 25%;
+}
+.date {
+  color: #888;
+  font-size: 80%;
+}

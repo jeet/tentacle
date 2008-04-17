@@ -1,0 +1,9 @@
+
+table.wide { 
+  width:100%;
+}
+
+td {
+  padding: 5px;
+  margin: 5px;
+}
