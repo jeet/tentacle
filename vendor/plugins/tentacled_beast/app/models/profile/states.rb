@@ -1,4 +1,6 @@
 class User
+  after_create :finish
+  
   acts_as_state_machine :initial => :pending
   state :passive
   state :pending, :enter => :make_activation_code
@@ -40,6 +42,12 @@ class User
   end
 
 protected
+  def finish
+    # Active the account; override this to implement real activation
+    register!
+    activate!
+  end
+  
   def do_delete
     self.deleted_at = Time.now.utc
   end

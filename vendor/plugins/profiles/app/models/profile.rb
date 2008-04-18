@@ -16,11 +16,6 @@
 
 class Profile < ActiveRecord::Base
   belongs_to :user
-
-  # Nicer "if plugin is installed" API
-  if const_defined?(:Friends)
-    can_follow
-  end
   
   validates_presence_of :first_name, :last_name, :email
   

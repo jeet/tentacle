@@ -1,4 +1,4 @@
-class UsersController
+class UsersController < ApplicationController
   before_filter :admin_required, :only => [:suspend, :unsuspend, :purge]
   before_filter :find_user, :only => [:suspend, :unsuspend, :purge]
   before_filter :login_required, :only => [:settings]

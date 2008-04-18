@@ -1,4 +1,3 @@
-require 'friends'
+Dependencies.load_once_paths.delete File.dirname(__FILE__)
 
-# Include hook code here
-ActiveRecord::Base.send(:extend, Friends::ClassMethods)
+require File.dirname(__FILE__) + "/app/models/profile"
