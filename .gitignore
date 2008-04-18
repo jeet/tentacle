@@ -5,3 +5,4 @@ public/javascripts/warehouse.js
 tmp
 log
 .DS_Store
+vendor/rails
