@@ -1,5 +1,9 @@
 require_dependency 'profile'
+require 'forwardable'
+
 class Profile
+  extend Forwardable
+  
   #concerned_with :validation, :states, :activation, :posting
   concerned_with :posting
   
@@ -11,6 +15,10 @@ class Profile
   
   has_many :monitorships, :dependent => :delete_all
   has_many :monitored_topics, :through => :monitorships, :source => :topic, :conditions => {"#{Monitorship.table_name}.active" => true}
+  
+  def_delegator :user, :admin, :admin  
+  def_delegator :user, :admin?, :admin?  
+  def_delegator :user, :admin=, :admin=
   
   # has_permalink :login
   
@@ -26,15 +34,6 @@ class Profile
 
   def available_forums
     @available_forums ||= group.ordered_forums - forums
-  end
-
-  def admin?
-    user.admin?
-  end
-  
-  def admin=(value)
-    user.admin=(value)
-    user.save
   end
 
   def moderator_of?(forum)
