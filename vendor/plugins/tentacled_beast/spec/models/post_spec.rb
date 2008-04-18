@@ -37,18 +37,18 @@ describe Post, "being deleted" do
     @deleting_post.should change { forums(:default).reload.posts_count }.by(-1)
   end
   
-  it "decrements cached site posts_count" do
-    @deleting_post.should change { sites(:default).reload.posts_count }.by(-1)
+  it "decrements cached group posts_count" do
+    @deleting_post.should change { groups(:default).reload.posts_count }.by(-1)
   end
   
-  it "decrements cached user posts_count" do
-    @deleting_post.should change { users(:default).reload.posts_count }.by(-1)
+  it "decrements cached profile posts_count" do
+    @deleting_post.should change { profiles(:default).reload.posts_count }.by(-1)
   end
 
-  it "fixes last_user_id" do
-    topics(:default).last_user_id = 1; topics(:default).save
+  it "fixes last_profile_id" do
+    topics(:default).last_profile_id = 1; topics(:default).save
     posts(:default).destroy
-    topics(:default).reload.last_user.should == users(:default)
+    topics(:default).reload.last_user.should == profiles(:default)
   end
   
   it "fixes last_updated_at" do
@@ -74,35 +74,35 @@ end
 
 describe Post, "#editable_by?" do
   before do
-    @user  = mock_model User
+    @profile  = mock_model Profile
     @post  = Post.new :forum => @forum
-    @forum = mock_model Forum, :user_id => @user.id
+    @forum = mock_model Forum, :profile_id => @profile.id
   end
 
-  it "restricts user for other post" do
-    @user.should_receive(:moderator_of?).and_return(false)
-    @post.should_not be_editable_by(@user)
+  it "restricts profile for other post" do
+    @profile.should_receive(:moderator_of?).and_return(false)
+    @post.should_not be_editable_by(@profile)
   end
 
-  it "allows user" do
-    @post.user_id = @user.id
-    @post.should be_editable_by(@user)
+  it "allows profile" do
+    @post.profile_id = @profile.id
+    @post.should be_editable_by(@profile)
   end
   
   it "allows admin" do
-    @user.should_receive(:moderator_of?).and_return(true)
-    @post.should be_editable_by(@user)
+    @profile.should_receive(:moderator_of?).and_return(true)
+    @post.should be_editable_by(@profile)
   end
   
   it "restricts moderator for other forum" do
     @post.should_receive(:forum).and_return @forum
-    @user.should_receive(:moderator_of?).with(@forum).and_return(false)
-    @post.should_not be_editable_by(@user)
+    @profile.should_receive(:moderator_of?).with(@forum).and_return(false)
+    @post.should_not be_editable_by(@profile)
   end
   
   it "allows moderator" do
     @post.should_receive(:forum).and_return @forum
-    @user.should_receive(:moderator_of?).with(@forum).and_return(true)
-    @post.should be_editable_by(@user)
+    @profile.should_receive(:moderator_of?).with(@forum).and_return(true)
+    @post.should be_editable_by(@profile)
   end
 end

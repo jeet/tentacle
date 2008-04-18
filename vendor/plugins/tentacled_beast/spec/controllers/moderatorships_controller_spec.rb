@@ -2,10 +2,10 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ModeratorshipsController, "POST #create" do
   before do
-    @attributes = {'user_id' => users(:default).id.to_s, 'forum_id' => forums(:default).id.to_s}
+    @attributes = {'profile_id' => profiles(:default).id.to_s, 'forum_id' => forums(:default).id.to_s}
     @errors     = []
     @errors.stub!(:full_messages).and_return(%w(foo bar))
-    @moderatorship = mock_model Moderatorship, :new_record? => false, :errors => @errors, :id => 5, :user => users(:default)
+    @moderatorship = mock_model Moderatorship, :new_record? => false, :errors => @errors, :id => 5, :profile => profiles(:default)
     Moderatorship.stub!(:new).with(@attributes).and_return(@moderatorship)
   end
   
@@ -18,7 +18,7 @@ describe ModeratorshipsController, "POST #create" do
     end
     
     it_assigns :moderatorship, :flash => { :notice => :not_nil }
-    it_redirects_to { user_path(users(:default)) }
+    it_redirects_to { profile_path(profiles(:default)) }
   end
 
   describe ModeratorshipsController, "(unsuccessful creation)" do
@@ -30,7 +30,7 @@ describe ModeratorshipsController, "POST #create" do
     end
     
     it_assigns :moderatorship, :flash => {:notice => nil, :error => :not_nil}
-    it_redirects_to { user_path(users(:default)) }
+    it_redirects_to { profile_path(profiles(:default)) }
   end
   
   describe ModeratorshipsController, "(successful creation, xml)" do
@@ -70,7 +70,7 @@ describe ModeratorshipsController, "DELETE #destroy" do
   end
 
   it_assigns :moderatorship
-  it_redirects_to { user_path(@moderatorship.user) }
+  it_redirects_to { profile_path(@moderatorship.profile) }
   
   describe ModeratorshipsController, "(xml)" do
     define_models

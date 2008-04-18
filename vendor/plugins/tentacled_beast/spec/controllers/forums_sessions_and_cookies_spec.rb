@@ -6,10 +6,4 @@ describe ForumsController, "(remember-me functionality)" do
   before do
     session[:forums_page] = {}
   end
-
-  it "logs in with valid login token" do
-    @request.cookies['auth_token'] = CGI::Cookie.new('auth_token', users(:default).token_expires_at)
-    get :index
-    controller.send(:current_user).should == users(:default)
-  end
 end

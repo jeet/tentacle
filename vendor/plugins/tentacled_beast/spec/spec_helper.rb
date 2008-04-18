@@ -15,13 +15,14 @@ Spec::Runner.configure do |config|
   config.use_instantiated_fixtures  = false
   config.fixture_path = RAILS_ROOT + '/spec/fixtures/'
 
-  def current_site(site)
-    @site = sites(site)
+  def current_group(group)
+    @group = groups(group)
   end
 
   # Sets the current user in the session from the user fixtures.
   def login_as(user)
     controller.stub!(:current_user).and_return(@user = user ? users(user) : nil)
+    @profile = users(user).profile if @user
   end
 
   def authorize_as(user)

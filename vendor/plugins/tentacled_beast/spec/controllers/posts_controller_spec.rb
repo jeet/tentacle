@@ -13,7 +13,7 @@ module PostsControllerParentObjects
       @topic.stub!(:posts).and_return([])
       @topic.posts.stub!(:search).with('foo', :page => 5).and_return(@posts)
       @topic.posts.stub!(:find).with('1').and_return(@post)
-      User.stub!(:index_from).and_return({users(:default).id => users(:default)})
+      Profile.stub!(:index_from).and_return({profiles(:default).id => profiles(:default)})
     end
   end
 end
@@ -22,7 +22,7 @@ describe PostsController, "GET #index" do
   include PostsControllerParentObjects
   define_models :stubbed
 
-  act! { get :index, :forum_id => 1, :topic_id => 1, :user => nil, :q => 'foo', :page => 5 }
+  act! { get :index, :forum_id => 1, :topic_id => 1, :profile => nil, :q => 'foo', :page => 5 }
   
   it_assigns :posts, :forum, :topic, :parent => lambda { @topic }
   it_renders :template, :index
@@ -30,7 +30,7 @@ describe PostsController, "GET #index" do
   describe PostsController, "(xml)" do
     define_models :stubbed
     
-    act! { get :index, :forum_id => 1, :topic_id => 1, :user => nil, :q => 'foo', :page => 5, :format => 'xml' }
+    act! { get :index, :forum_id => 1, :topic_id => 1, :profile => nil, :q => 'foo', :page => 5, :format => 'xml' }
 
     it_assigns :posts, :forum, :topic, :parent => lambda { @topic }
     it_renders :xml, :posts
@@ -48,10 +48,10 @@ describe PostsController, "GET #index (for forums)" do
     @forum.stub!(:posts).and_return([])
     @forum.posts.stub!(:search).with('foo', :page => 5).and_return(@posts)
     Forum.stub!(:find_by_permalink).with('1').and_return(@forum)
-    User.stub!(:index_from).and_return({users(:default).id => users(:default)})
+    Profile.stub!(:index_from).and_return({profiles(:default).id => profiles(:default)})
   end
 
-  it_assigns :posts, :forum, :topic => nil, :user => nil, :parent => lambda { @forum }
+  it_assigns :posts, :forum, :topic => nil, :profile => nil, :parent => lambda { @forum }
   it_renders :template, :index
 
   describe PostsController, "(xml)" do
@@ -59,20 +59,20 @@ describe PostsController, "GET #index (for forums)" do
     
     act! { get :index, :forum_id => 1, :page => 5, :q => 'foo', :format => 'xml' }
 
-    it_assigns :posts, :forum, :topic => nil, :user => nil, :parent => lambda { @forum }
+    it_assigns :posts, :forum, :topic => nil, :profile => nil, :parent => lambda { @forum }
     it_renders :xml, :posts
   end
 end
 
-describe PostsController, "GET #index (for users)" do
+describe PostsController, "GET #index (for profiles)" do
   define_models :stubbed
 
-  act! { get :index, :user_id => 1, :q => 'foo', :page => 5 }
+  act! { get :index, :profile_id => 1, :q => 'foo', :page => 5 }
 
   before do
     @posts = []
-    @user = users(:default)
-    @user.stub!(:posts).and_return([])
+    @profile = profiles(:default)
+    @profile.stub!(:posts).and_return([])
     @profile.posts.stub!(:search).with('foo', :page => 5).and_return(@posts)
     Profile.stub!(:find_by_permalink).with('1').and_return(@profile)
     Profile.stub!(:index_from).and_return { raise("Nooooo") }
@@ -84,9 +84,9 @@ describe PostsController, "GET #index (for users)" do
   describe PostsController, "(xml)" do
     define_models :stubbed
     
-    act! { get :index, :user_id => 1, :page => 5, :q => 'foo', :format => 'xml' }
+    act! { get :index, :profile_id => 1, :page => 5, :q => 'foo', :format => 'xml' }
 
-    it_assigns :posts, :user, :forum => nil, :topic => nil, :parent => lambda { @user }
+    it_assigns :posts, :profile, :forum => nil, :topic => nil, :parent => lambda { @profile }
     it_renders :xml, :posts
   end
 end
@@ -99,10 +99,10 @@ describe PostsController, "GET #index (globally)" do
   before do
     @posts = []
     Post.stub!(:search).with('foo', :page => 5).and_return(@posts)
-    User.stub!(:index_from).and_return({users(:default).id => users(:default)})
+    Profile.stub!(:index_from).and_return({profiles(:default).id => profiles(:default)})
   end
 
-  it_assigns :posts, :user => nil, :forum => nil, :topic => nil, :parent => nil
+  it_assigns :posts, :profile => nil, :forum => nil, :topic => nil, :parent => nil
   it_renders :template, :index
 
   describe PostsController, "(xml)" do
@@ -110,7 +110,7 @@ describe PostsController, "GET #index (globally)" do
     
     act! { get :index, :page => 5, :q => 'foo', :format => 'xml' }
 
-    it_assigns :posts, :user => nil, :forum => nil, :topic => nil, :parent => nil
+    it_assigns :posts, :profile => nil, :forum => nil, :topic => nil, :parent => nil
     it_renders :xml, :posts
   end
 end
@@ -175,7 +175,7 @@ describe PostsController, "POST #create" do
     login_as :default
     @attributes = {:body => 'foo'}
     @post = mock_model Post, :new_record? => false, :errors => []
-    @user.stub!(:reply).with(@topic, @attributes[:body]).and_return(@post)
+    @profile.stub!(:reply).with(@topic, @attributes[:body]).and_return(@post)
   end
   
   describe PostsController, "(successful creation)" do

@@ -14,8 +14,8 @@ ModelStubbing.define_models do
   end
   
   model Forum do
-    stub :name => "Default", :topics_count => 2, :posts_count => 2, :position => 1, :state => 'public', :group => all_stubs(:group), :permalink => 'default'
-    stub :other, :name => "O Hai", :topics_count => 23, :posts_count => 2, :position => 2, :state => 'public', :group => all_stubs(:group), :permalink => 'default'
+    stub :name => "Default", :topics_count => 2, :posts_count => 2, :position => 2, :state => 'public', :group => all_stubs(:group), :permalink => 'default'
+    stub :other, :name => "O Hai", :topics_count => 23, :posts_count => 2, :position => 1, :state => 'public', :group => all_stubs(:group), :permalink => 'default'
   end
   
   model Topic do

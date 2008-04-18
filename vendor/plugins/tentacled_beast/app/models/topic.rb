@@ -25,7 +25,7 @@ class Topic < ActiveRecord::Base
   has_many :voices, :through => :posts, :source => :profile, :uniq => true
   
   has_many :monitorships, :dependent => :delete_all
-  has_many :monitoring_profiles, :through => :monitorships, :source => :profile, :conditions => {"#{Monitorship.table_name}.active" => true}
+  has_many :monitoring_users, :through => :monitorships, :source => :profile, :conditions => {"#{Monitorship.table_name}.active" => true}
   
   validates_presence_of :profile_id, :forum_id, :title
   validates_presence_of :body, :on => :create

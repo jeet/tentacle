@@ -2,24 +2,24 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 ModelStubbing.define_models :monitorships do
   model Monitorship do
-    stub :user => all_stubs(:user), :topic => all_stubs(:topic), :active => true
-    stub :inactive, :user => all_stubs(:user), :topic => all_stubs(:other_topic), :active => false
+    stub :profile => all_stubs(:profile), :topic => all_stubs(:topic), :active => true
+    stub :inactive, :profile => all_stubs(:profile), :topic => all_stubs(:other_topic), :active => false
   end
 end
 
-describe User, "(monitorships)" do
+describe Profile, "(monitorships)" do
   define_models :monitorships
   
   it "selects topics" do
-    users(:default).monitored_topics.should == [topics(:default)]
+    profiles(:default).monitored_topics.should == [topics(:default)]
   end
 end
 
 describe Topic, "(Monitorships)" do
   define_models :monitorships
   
-  it "selects users" do
-    topics(:default).monitoring_users.should == [users(:default)]
+  it "selects profiles" do
+    topics(:default).monitoring_users.should == [profiles(:default)]
     topics(:other).monitoring_users.should == []
   end
 end
@@ -30,20 +30,20 @@ describe Monitorship do
   it "adds user/topic relation" do
     topics(:other_forum).monitoring_users.should == []
     lambda do
-      topics(:other_forum).monitoring_users << users(:default)
+      topics(:other_forum).monitoring_users << profiles(:default)
     end.should change { Monitorship.count }.by(1)
-    topics(:other_forum).monitoring_users(true).should == [users(:default)]
+    topics(:other_forum).monitoring_users(true).should == [profiles(:default)]
   end
 
-  it "adds user/topic relation over inactive monitorship" do
+  it "adds profile/topic relation over inactive monitorship" do
     topics(:other).monitoring_users.should == []
     lambda do
-      topics(:other).monitoring_users << users(:default)
+      topics(:other).monitoring_users << profiles(:default)
     end.should raise_error(ActiveRecord::RecordNotSaved)
-    topics(:other).monitoring_users(true).should == [users(:default)]
+    topics(:other).monitoring_users(true).should == [profiles(:default)]
   end
 
-  %w(user_id topic_id).each do |attr|
+  %w(profile_id topic_id).each do |attr|
     it "requires #{attr}" do
       mod = new_monitorship(:default)
       mod.send("#{attr}=", nil)
@@ -54,11 +54,11 @@ describe Monitorship do
   
   it "doesn't add duplicate relation" do
     lambda do
-      topics(:default).monitoring_users << users(:default)
+      topics(:default).monitoring_users << profiles(:default)
     end.should raise_error(ActiveRecord::RecordInvalid)
   end
   
-  %w(topic user).each do |model|
+  %w(topic profile).each do |model|
     it "is cleaned up after a #{model} is deleted" do
       send(model.pluralize, :default).destroy
       lambda do

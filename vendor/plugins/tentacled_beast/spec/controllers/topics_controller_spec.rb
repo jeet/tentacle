@@ -67,24 +67,24 @@ describe TopicsController, "GET #show" do
   
     before do
       controller.stub!(:current_user).and_return(users(:default))
-      controller.current_user.stub!(:seen!)
+      controller.current_user.profile.stub!(:seen!)
     end
 
     it_assigns :topic, :forum, :session => {:topics => :not_nil}
   
     it "increments topic hit count" do
-      @topic.user_id = 5
+      @topic.profile_id = 5
       @topic.should_receive(:hit!)
       act!
     end
   
-    it "doesn't increment topic hit count for same user" do
+    it "doesn't increment topic hit count for same profile" do
       @topic.stub!(:hit!).and_return { raise "Noooooo" }
       act!
     end
     
-    it "marks User#last_seen_at" do
-      controller.current_user.should_receive(:seen!)
+    it "marks Profile#last_seen_at" do
+      controller.current_user.profile.should_receive(:seen!)
       act!
     end
   end
@@ -149,7 +149,7 @@ describe TopicsController, "POST #create" do
     Forum.stub!(:find_by_permalink).with('1').and_return(@forum)
     @attributes = {}
     @topic = mock_model Topic, :new_record? => false, :errors => []
-    @user.stub!(:post).with(@forum, @attributes).and_return(@topic)
+    @profile.stub!(:post).with(@forum, @attributes).and_return(@topic)
   end
   
   describe TopicsController, "(successful creation)" do
@@ -211,7 +211,7 @@ describe TopicsController, "PUT #update" do
     @topic = topics(:default)
     @forum.stub!(:topics).and_return([])
     @forum.topics.stub!(:find_by_permalink).with('1').and_return(@topic)
-    @user.stub!(:revise).with(@topic, @attributes)
+    @profile.stub!(:revise).with(@topic, @attributes)
   end
   
   describe TopicsController, "(successful save)" do

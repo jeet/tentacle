@@ -5,7 +5,7 @@ module TopicCreatePostHelper
     base.define_models
     
     base.before do
-      @user  = users(:default)
+      @profile  = profiles(:default)
       @attributes = {:body => 'booya'}
       @creating_topic = lambda { post! }
     end
@@ -16,10 +16,10 @@ module TopicCreatePostHelper
       @topic.reload.last_updated_at.should == @topic.posts.first.created_at
     end
   
-    base.it "sets topic's last_user_id" do
+    base.it "sets topic's last_profile_id" do
       @topic = post!
       @topic.should_not be_new_record
-      @topic.reload.last_user.should == @topic.posts.first.user
+      @topic.reload.last_profile.should == @topic.posts.first.profile
     end
 
     base.it "increments Topic.count" do
@@ -30,24 +30,24 @@ module TopicCreatePostHelper
       @creating_topic.should change { Post.count }.by(1)
     end
     
-    base.it "increments cached site topics_count" do
-      @creating_topic.should change { sites(:default).reload.topics_count }.by(1)
+    base.it "increments cached group topics_count" do
+      @creating_topic.should change { groups(:default).reload.topics_count }.by(1)
     end
     
     base.it "increments cached forum topics_count" do
       @creating_topic.should change { forums(:default).reload.topics_count }.by(1)
     end
     
-    base.it "increments cached site posts_count" do
-      @creating_topic.should change { sites(:default).reload.posts_count }.by(1)
+    base.it "increments cached group posts_count" do
+      @creating_topic.should change { groups(:default).reload.posts_count }.by(1)
     end
     
     base.it "increments cached forum posts_count" do
       @creating_topic.should change { forums(:default).reload.posts_count }.by(1)
     end
     
-    base.it "increments cached user posts_count" do
-      @creating_topic.should change { users(:default).reload.posts_count }.by(1)
+    base.it "increments cached profile posts_count" do
+      @creating_topic.should change { profiles(:default).reload.posts_count }.by(1)
     end
   end
 
@@ -92,7 +92,7 @@ describe Profile, "#post for moderators" do
   end
 end
 
-describe User, "#post for admins" do
+describe Profile, "#post for admins" do
   include TopicCreatePostHelper
   
   before do
@@ -130,7 +130,7 @@ module TopicUpdatePostHelper
   end
 end
 
-describe User, "#revise(topic) for profiles" do  
+describe Profile, "#revise(topic) for profiles" do  
   include TopicUpdatePostHelper
   
   it "ignores sticky bit" do
@@ -146,11 +146,11 @@ describe User, "#revise(topic) for profiles" do
   end
 end
 
-describe User, "#revise(topic) for moderators" do
+describe Profile, "#revise(topic) for moderators" do
   include TopicUpdatePostHelper
   
   before do
-    @user.stub!(:moderator_of?).and_return(true)
+    @profile.stub!(:moderator_of?).and_return(true)
   end
   
   it "sets sticky bit" do
@@ -166,11 +166,11 @@ describe User, "#revise(topic) for moderators" do
   end
 end
 
-describe User, "#revise(topic) for admins" do
+describe Profile, "#revise(topic) for admins" do
   include TopicUpdatePostHelper
   
   before do
-    @user.admin = true
+    @profile.admin = true
   end
   
   it "sets sticky bit" do
@@ -186,11 +186,11 @@ describe User, "#revise(topic) for admins" do
   end
 end
 
-describe User, "#reply" do
+describe Profile, "#reply" do
   define_models
   
   before do
-    @user  = users(:default)
+    @profile  = profiles(:default)
     @topic = topics(:default)
     @creating_post = lambda { post! }
   end
@@ -206,10 +206,10 @@ describe User, "#reply" do
     @topic.reload.last_updated_at.should == @post.created_at
   end
 
-  it "sets topic's last_user_id" do
-    Topic.update_all 'last_user_id = 3'
+  it "sets topic's last_profile_id" do
+    Topic.update_all 'last_profile_id = 3'
     @post = post!
-    @topic.reload.last_user.should == @post.user
+    @topic.reload.last_profile.should == @post.profile
   end
   
   it "increments Post.count" do
@@ -224,15 +224,15 @@ describe User, "#reply" do
     @creating_post.should change { forums(:default).reload.posts_count }.by(1)
   end
   
-  it "increments cached site posts_count" do
-    @creating_post.should change { sites(:default).reload.posts_count }.by(1)
+  it "increments cached group posts_count" do
+    @creating_post.should change { groups(:default).reload.posts_count }.by(1)
   end
   
-  it "increments cached user posts_count" do
-    @creating_post.should change { users(:default).reload.posts_count }.by(1)
+  it "increments cached profile posts_count" do
+    @creating_post.should change { profiles(:default).reload.posts_count }.by(1)
   end
 
   def post!
-    @user.reply topics(:default), 'duane, i think you might be color blind.'
+    @profile.reply topics(:default), 'duane, i think you might be color blind.'
   end
 end

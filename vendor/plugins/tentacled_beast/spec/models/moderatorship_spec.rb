@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Moderatorship do
   define_models do
     model Moderatorship do
-      stub :user => all_stubs(:user), :forum => all_stubs(:forum)
+      stub :profile => all_stubs(:profile), :forum => all_stubs(:forum)
     end
     
     model Group do
@@ -18,12 +18,12 @@ describe Moderatorship do
   it "adds user/forum relation" do
     forums(:other).moderators.should == []
     lambda do
-      forums(:other).moderators << users(:default)
+      forums(:other).moderators << profiles(:default)
     end.should change { Moderatorship.count }.by(1)
-    forums(:other).moderators(true).should == [users(:default)]
+    forums(:other).moderators(true).should == [profiles(:default)]
   end
   
-  %w(user_id forum_id).each do |attr|
+  %w(profile_id forum_id).each do |attr|
     it "requires #{attr}" do
       mod = new_moderatorship(:default)
       mod.send("#{attr}=", nil)
@@ -34,17 +34,11 @@ describe Moderatorship do
   
   it "doesn't add duplicate relation" do
     lambda do
-      forums(:default).moderators << users(:default)
+      forums(:default).moderators << profiles(:default)
     end.should raise_error(ActiveRecord::RecordInvalid)
   end
   
-  it "doesn't add relation for user and forum in different sites" do
-    lambda do
-      forums(:other_site).moderators << users(:default)
-    end.should raise_error(ActiveRecord::RecordInvalid)
-  end
-  
-  %w(forum user).each do |model|
+  %w(forum profile).each do |model|
     it "is cleaned up after a #{model} is deleted" do
       send(model.pluralize, :default).destroy
       lambda do
@@ -55,14 +49,14 @@ describe Moderatorship do
 end
 
 ModelStubbing.define_models :moderators do
-  model User do
-    stub :other, :login => 'other-user', :email => '@example.com'
+  model Profile do
+    stub :other, :email => '@example.com'
   end
 
   model Moderatorship do
-    stub :user => all_stubs(:user), :forum => all_stubs(:forum)
-    stub :default_other, :user => all_stubs(:user), :forum => all_stubs(:other_forum)
-    stub :other_default, :user => all_stubs(:other_user)
+    stub :profile => all_stubs(:profile), :forum => all_stubs(:forum)
+    stub :default_other, :profile => all_stubs(:profile), :forum => all_stubs(:other_forum)
+    stub :other_default, :profile => all_stubs(:other_profile)
   end
 end
 
@@ -70,16 +64,16 @@ describe Forum, "#moderators" do
   define_models :moderators
 
   it "finds moderators for forum" do
-    forums(:default).moderators.sort_by(&:login).should == [users(:default), users(:other)]
-    forums(:other).moderators.should == [users(:default)]
+    forums(:default).moderators.sort_by {|prof| prof.user.login}.should == [profiles(:default), profiles(:other)]
+    forums(:other).moderators.should == [profiles(:default)]
   end
 end
 
-describe User, "#forums" do
+describe Profile, "#forums" do
   define_models :moderators
 
-  it "finds forums for users" do
-    users(:default).forums.sort_by(&:name).should == [forums(:default), forums(:other)]
-    users(:other).forums.should == [forums(:default)]
+  it "finds forums for profiles" do
+    profiles(:default).forums.sort_by(&:name).should == [forums(:default), forums(:other)]
+    profiles(:other).forums.should == [forums(:default)]
   end
 end

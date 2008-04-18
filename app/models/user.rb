@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   
   before_create :set_default_attributes
   before_save :save_avatar_data
-  after_save :encrypt_password
+  before_save :encrypt_password!
 
   belongs_to :avatar
   has_one :profile
@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
       when 'plain' then user.password
       when 'md5'   then Digest::MD5::hexdigest([user.login, Tentacle.authentication_realm, password].join(":"))
       when 'basic' then password.crypt(TokenGenerator.generate_simple(2))
-    end
+    end if password
   end
   
   def self.password_matches?(user, password)
@@ -89,8 +89,7 @@ class User < ActiveRecord::Base
   end
   
   def encrypt_password!(password = nil)
-    self.crypted_password = self.class.encrypt_password(self, password) if password
-    save
+    self.crypted_password = self.class.encrypt_password(self, password)
   end
   
   def password_matches?(password)
@@ -105,7 +104,7 @@ class User < ActiveRecord::Base
     end
 
     def presence_of_identity_url_or_email
-      if identity_url.blank? && (profile.email.blank? || login.blank?)
+      if identity_url.blank? && (login.blank?)
         errors.add_to_base "Requires at least an email and login"
       end
     end

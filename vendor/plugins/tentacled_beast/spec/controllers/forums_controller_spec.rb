@@ -6,10 +6,10 @@ describe ForumsController, "GET #index" do
   act! { get :index }
 
   before do
-    @site   = sites(:default)
+    @group   = groups(:default)
     @forums = [forums(:other), forums(:default)]
-    @site.stub!(:ordered_forums).and_return(@forums)
-    @controller.stub!(:current_site).and_return(@site)
+    @group.stub!(:ordered_forums).and_return(@forums)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
     session[:forums_page] = {1 => 5}
     @forum_time = session[:forums] = {1 => 5.minutes.ago.utc}
@@ -34,12 +34,12 @@ describe ForumsController, "GET #show" do
   act! { get :show, :id => 1 }
 
   before do
-    @site   = sites(:default)
+    @group   = groups(:default)
     @forum  = forums(:default)
     @topics = [topics(:default)]
-    @site.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
+    @group.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
     @forum.topics.stub!(:paginate).with(:page => 1).and_return(@topics)
-    @controller.stub!(:current_site).and_return(@site)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
     @controller.stub!(:logged_in?).and_return(false)
     @forum_page = session[:forums_page] = {@forum.id => 1}
@@ -79,9 +79,9 @@ describe ForumsController, "GET #new" do
   define_models :stubbed
   act! { get :new }
   before do
-    @site   = sites(:default)
+    @group   = groups(:default)
     @forum  = Forum.new
-    @controller.stub!(:current_site).and_return(@site)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
   end
 
@@ -105,10 +105,10 @@ describe ForumsController, "GET #edit" do
   act! { get :edit, :id => 1 }
   
   before do
-    @site   = sites(:default)
+    @group   = groups(:default)
     @forum  = forums(:default)
-    @site.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
-    @controller.stub!(:current_site).and_return(@site)
+    @group.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
   end
 
@@ -120,9 +120,9 @@ describe ForumsController, "POST #create" do
   before do
     @attributes = {'name' => "Default"}
     @forum      = mock_model Forum, :new_record? => false, :errors => []
-    @site       = sites(:default)
-    @site.forums.stub!(:build).with(@attributes).and_return(@forum)
-    @controller.stub!(:current_site).and_return(@site)
+    @group       = groups(:default)
+    @group.forums.stub!(:build).with(@attributes).and_return(@forum)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
   end
   
@@ -180,9 +180,9 @@ describe ForumsController, "PUT #update" do
   before do
     @attributes = {'name' => "Default"}
     @forum      = forums(:default)
-    @site       = sites(:default)
-    @site.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
-    @controller.stub!(:current_site).and_return(@site)
+    @group       = groups(:default)
+    @group.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
   end
   
@@ -242,9 +242,9 @@ describe ForumsController, "DELETE #destroy" do
   before do
     @forum      = forums(:default)
     @forum.stub!(:destroy)
-    @site       = sites(:default)
-    @site.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
-    @controller.stub!(:current_site).and_return(@site)
+    @group       = groups(:default)
+    @group.forums.stub!(:find_by_permalink).with('1').and_return(@forum)
+    @controller.stub!(:current_group).and_return(@group)
     @controller.stub!(:admin_required).and_return(true)
   end
 

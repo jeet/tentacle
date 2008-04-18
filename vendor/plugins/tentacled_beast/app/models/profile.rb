@@ -31,6 +31,11 @@ class Profile
   def admin?
     user.admin?
   end
+  
+  def admin=(value)
+    user.admin=(value)
+    user.save
+  end
 
   def moderator_of?(forum)
     admin? || Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)

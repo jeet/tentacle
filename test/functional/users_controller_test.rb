@@ -17,8 +17,8 @@ context "Users Controller" do
   
   specify "should allow user to update self" do
     login_as :justin
-    put :update, :id => users(:justin).id, :user => { :password => 'neep'}
-    assert_redirected_to root_path
+    put :update, :id => users(:justin).id, :user => { :password => 'neep', :password_confirm => 'neep'}
+    assert_template 'edit'
     users(:justin).login.should == 'railsfoeva'
   end
   

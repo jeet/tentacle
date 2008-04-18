@@ -49,8 +49,9 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "users_count", :default => 0
-    t.integer  "posts_count", :default => 0
+    t.integer  "users_count",  :default => 0
+    t.integer  "posts_count",  :default => 0
+    t.integer  "topics_count"
   end
 
   create_table "memberships", :force => true do |t|

@@ -5,11 +5,11 @@ class ModeratorshipsController < ApplicationController
     respond_to do |format|
       if @moderatorship.save
         flash[:notice] = 'Moderatorship was successfully created.'
-        format.html { redirect_to(@moderatorship.user) }
+        format.html { redirect_to(@moderatorship.profile) }
         format.xml  { render :xml  => @moderatorship, :status => :created, :location => @moderatorship }
       else
         flash[:error] = "Moderatorship could not be created: #{@moderatorship.errors.full_messages.to_sentence}"
-        format.html { redirect_to(@moderatorship.user) }
+        format.html { redirect_to(@moderatorship.profile) }
         format.xml  { render :xml  => @moderatorship.errors, :status => :unprocessable_entity }
       end
     end
@@ -20,7 +20,7 @@ class ModeratorshipsController < ApplicationController
     @moderatorship.destroy
 
     respond_to do |format|
-      format.html { redirect_to(@moderatorship.user) }
+      format.html { redirect_to(@moderatorship.profile) }
       format.xml  { head :ok }
     end
   end

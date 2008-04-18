@@ -19,11 +19,11 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html do
         if logged_in?
-          # current_profile.seen! # todo
+          current_user.profile.seen! # todo
           (session[:topics] ||= {})[@topic.id] = Time.now.utc
         end
         
-        @topic.hit! unless logged_in? && @topic.user_id == current_user.id
+        @topic.hit! unless logged_in? && @topic.profile_id == current_user.profile.id
         @posts = @topic.posts.paginate :page => current_page
         @post  = Post.new
       end
@@ -41,7 +41,7 @@ class TopicsController < ApplicationController
   end
 
   def create
-    @topic = current_user.post @forum, params[:topic]
+    @topic = current_user.profile.post @forum, params[:topic]
 
     respond_to do |format|
       if @topic.new_record?
@@ -56,7 +56,7 @@ class TopicsController < ApplicationController
   end
 
   def update
-    current_user.revise @topic, params[:topic]
+    current_user.profile.revise @topic, params[:topic]
     respond_to do |format|
       if @topic.errors.empty?
         flash[:notice] = 'Topic was successfully updated.'

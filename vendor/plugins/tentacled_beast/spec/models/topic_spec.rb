@@ -18,7 +18,7 @@ describe Topic do
     topics(:default).last_updated_at.should == current_date
   end
 
-  [:title, :user_id, :forum_id].each do |attr|
+  [:title, :profile_id, :forum_id].each do |attr|
     it "validates presence of #{attr}" do
       t = new_topic(:default)
       t.send("#{attr}=", nil)
@@ -67,7 +67,7 @@ describe Topic do
   it "doesn't allow new posts for locked topics" do
     @topic = topics(:default)
     @topic.locked = true ; @topic.save
-    @post = @topic.user.reply @topic, 'booya'
+    @post = @topic.profile.reply @topic, 'booya'
     @post.should be_new_record
     @post.errors.on(:base).should == 'Topic is locked'
   end
@@ -103,16 +103,16 @@ describe Topic, "being deleted" do
     @deleting_topic.should change { forums(:default).reload.posts_count }.by(-1)
   end
   
-  it "decrements cached site topics_count" do
-    @deleting_topic.should change { sites(:default).reload.topics_count }.by(-1)
+  it "decrements cached group topics_count" do
+    @deleting_topic.should change { groups(:default).reload.topics_count }.by(-1)
   end
   
-  it "decrements cached site posts_count" do
-    @deleting_topic.should change { sites(:default).reload.posts_count }.by(-1)
+  it "decrements cached group posts_count" do
+    @deleting_topic.should change { groups(:default).reload.posts_count }.by(-1)
   end
   
-  it "decrements cached user posts_count" do
-    @deleting_topic.should change { users(:default).reload.posts_count }.by(-1)
+  it "decrements cached profile posts_count" do
+    @deleting_topic.should change { profiles(:default).reload.posts_count }.by(-1)
   end
 end
 
@@ -151,25 +151,25 @@ end
 
 describe Topic, "#editable_by?" do
   before do
-    @user  = mock_model User
+    @profile  = mock_model Profile
     @topic = Topic.new :forum => @forum
     @forum = mock_model(Forum)
   end
 
-  it "restricts user for other topic" do
-    @user.should_receive(:moderator_of?).and_return(false)
-    @topic.should_not be_editable_by(@user)
+  it "restricts profile for other topic" do
+    @profile.should_receive(:moderator_of?).and_return(false)
+    @topic.should_not be_editable_by(@profile)
   end
 
-  it "allows user" do
-    @topic.user_id = @user.id
-    @topic.should be_editable_by(@user)
+  it "allows profile" do
+    @topic.profile_id = @profile.id
+    @topic.should be_editable_by(@profile)
   end
   
   it "allows moderator" do
     @topic.should_receive(:forum).and_return(@forum)
-    @user.should_receive(:moderator_of?).with(@forum).and_return(true)
+    @profile.should_receive(:moderator_of?).with(@forum).and_return(true)
     # @topic.forum_id = 2
-    @topic.should be_editable_by(@user)
+    @topic.should be_editable_by(@profile)
   end
 end
