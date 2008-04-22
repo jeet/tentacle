@@ -48,7 +48,7 @@ describe Post, "being deleted" do
   it "fixes last_profile_id" do
     topics(:default).last_profile_id = 1; topics(:default).save
     posts(:default).destroy
-    topics(:default).reload.last_user.should == profiles(:default)
+    topics(:default).reload.last_profile.should == profiles(:default)
   end
   
   it "fixes last_updated_at" do
