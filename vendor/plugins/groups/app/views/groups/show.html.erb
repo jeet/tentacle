@@ -1,9 +1,23 @@
 <h1>Group: <%=h @group.name %></h1>
 
+<% if member = Membership.join_from(@group, current_profile) %>
+  You're in this group!
+  <%= link_to "Leave this group", member, :method => :delete %>
+
+  <% if member.admin? %>
+  You're an admin!
+  <% end %>
+<% else %>
+
+  <%= link_to "Join this group", memberships_path(:group_id => @group.id), :method => :post %>
+<% end %>
+
 <p>Group members:</p>
 
 <ul>
 <% @group.members.each do |member| %>
-  <li><%= link_to h(member.name), member %></li>
+  <li><%= link_to h(member.user.name), member %></li>
 <% end %>
 </ul>
+
+<%= yield :group_show %>

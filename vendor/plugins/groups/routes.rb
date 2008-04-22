@@ -1,1 +1,2 @@
 resources :groups
+resources :memberships

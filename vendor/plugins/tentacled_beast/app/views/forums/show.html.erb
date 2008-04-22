@@ -5,25 +5,26 @@
 <hr />
 <% end %>
 
+<!-- moderators -->
 <h5 style="margin-bottom:1.0em;"><%= 'Moderators'[:moderators] %></h5>
 
-<% unless @forum.moderators.empty? -%>
-<ul class="flat" style="margin-top:1em;">
-<% @forum.moderators.each do |user| -%>
-  <li><%= link_to h(user.display_name || user.login), user %></li>
-<% end -%>
-</ul>
-<% else -%>
-<p><%= 'This forum is currently unmoderated.'[:forum_is_unmoderated] %></p>
-<p><%= 'Please always be courteous.'[:please_be_courteous] %></p>
-<% end -%>
-
+  <% unless @forum.moderators.empty? -%>
+  <ul class="flat" style="margin-top:1em;">
+    <% @forum.moderators.each do |user| -%>
+      <li><%= link_to h(user.display_name || user.login), user %></li>
+    <% end -%>
+  </ul>
+  <% else -%>
+    <p><%= 'This forum is currently unmoderated.'[:forum_is_unmoderated] %></p>
+    <p><%= 'Please always be courteous.'[:please_be_courteous] %></p>
+  <% end -%>
+<!-- end moderators -->
 <% end %>
 
 <% @page_title = @forum.name %>
 
 <div class="crumbs">
-<%= link_to 'Forums'[:forums_title], root_path %> <span class="arrow">&rarr;</span>
+<%= link_to h(current_group.name), current_group %> : <%= link_to 'Forums'[:forums_title], forums_path(:group_id => current_group) %> <span class="arrow">&rarr;</span>
 </div>
 <h1 style="margin-top:0.5em">
   <%= h @forum.name %>

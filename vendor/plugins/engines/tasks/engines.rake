@@ -80,7 +80,7 @@ end
 # Plugin#code_paths).
 namespace :doc do
 
-  plugins = FileList['vendor/plugins/**'].collect { |plugin| File.basename(plugin) }
+  plugins = FileList['vendor/plugins/**/**'].collect { |plugin| File.basename(plugin) }
 
   namespace :plugins do
 

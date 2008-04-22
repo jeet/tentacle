@@ -15,4 +15,5 @@ class Group
   def to_param
     name
   end
+  
 end

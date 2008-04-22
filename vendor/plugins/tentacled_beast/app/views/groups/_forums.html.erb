@@ -1,0 +1,9 @@
+<h2>Forums</h2>
+<ul>
+<% current_group.forums.each do |forum| %>
+  <li><%= link_to h(forum.name), forum_path(:id => forum.permalink, :group_id => current_group) %></li>
+<% end %>
+</ul>
+
+<!-- perm -->
+<%= link_to "Create a new forum", new_forum_path(:group_id => current_group) %>

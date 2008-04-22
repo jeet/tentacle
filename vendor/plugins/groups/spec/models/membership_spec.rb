@@ -19,6 +19,13 @@ describe Membership do
   #  profile.should_not be_valid
   #end
   
+  it "sets first user as admin" do
+    group = Group.create! :name => 'Oh, hai'
+    membership = create_membership :group => group
+    membership.save!
+    membership.should be_admin
+  end
+  
   it "should allow a user to leave a group" do
     pending 
   end

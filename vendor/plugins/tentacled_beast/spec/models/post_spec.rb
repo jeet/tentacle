@@ -42,6 +42,13 @@ describe Post, "being deleted" do
   end
   
   it "decrements cached profile posts_count" do
+    profiles(:default).posts_count.should == 0
+    posts(:default).profile.should == profiles(:default)
+    profiles(:default).posts.count.should == 4
+    posts(:default).destroy
+    profiles(:default).posts.count.should == 3
+    profiles(:default).reload
+    profiles(:default).posts_count.should == -1
     @deleting_post.should change { profiles(:default).reload.posts_count }.by(-1)
   end
 

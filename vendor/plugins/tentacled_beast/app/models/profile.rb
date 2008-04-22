@@ -37,7 +37,10 @@ class Profile
   end
 
   def moderator_of?(forum)
-    admin? || Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)
+    return true if admin?
+    member = Membership.join_from(forum.group, self) 
+    return true if member && member.admin?
+    return true if Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)
   end
 
   def display_name
@@ -62,6 +65,6 @@ class Profile
   end
   
   def to_param
-    permalink
+    user.login # id # permalink
   end
 end

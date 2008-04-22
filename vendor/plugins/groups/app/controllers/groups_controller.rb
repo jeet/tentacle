@@ -1,11 +1,18 @@
 class GroupsController < ApplicationController
-
+protected
+  prepend_before_filter :load_group, :except => [ :index, :new, :create ] # so it doesn't use the group_id method
+  def load_group
+    @group = Group.find_by_name(params[:id].titleize) or raise ActiveRecord::RecordNotFound
+  end
+  
+public
+  
   def index
     @groups = Group.find(:all)
   end
   
   def show
-    @group = Group.find_by_name(params[:id].titleize) or raise ActiveRecord::RecordNotFound
+    #@group = Group.find_by_name(params[:id].titleize) or raise ActiveRecord::RecordNotFound
     
     respond_to do |format|
       format.html
@@ -17,7 +24,7 @@ class GroupsController < ApplicationController
   end
   
   def edit
-    @group = Group.find_by_name(params[:id].titleize)
+    #@group = Group.find_by_name(params[:id].titleize)
     
     respond_to do |format|
       format.html
@@ -28,6 +35,7 @@ class GroupsController < ApplicationController
     @group = Group.new(params[:group])
     
     if @group.save
+      @group.memberships.create :profile_id => current_user.profile.id
       redirect_to group_path(@group)
     else
       render :action => 'new'
@@ -35,7 +43,7 @@ class GroupsController < ApplicationController
   end
   
   def update
-    @group = Group.find_by_name(params[:id].titleize)
+    #@group = Group.find_by_name(params[:id].titleize)
 
     respond_to do |format|
       if @group.update_attributes(params[:group])
@@ -47,7 +55,7 @@ class GroupsController < ApplicationController
   end
   
   def destroy
-    @group = Group.find_by_name(params[:id].titleize)
+    #@group = Group.find_by_name(params[:id].titleize)
     @group.destroy unless Group.name == 'Default'
 
     respond_to do |format|

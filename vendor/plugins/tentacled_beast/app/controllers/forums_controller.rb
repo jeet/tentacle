@@ -1,6 +1,19 @@
 class ForumsController < ApplicationController
   before_filter :admin_required, :except => [:index, :show]
 
+protected
+
+  def current_member
+    Membership.join_from(current_group, current_profile)
+  end
+
+  alias :admin_without_membership :admin?
+  def admin?
+    (current_member && current_member.admin?) || admin_without_membership
+  end
+
+
+public
   # GET /forums
   # GET /forums.xml
   def index
@@ -18,7 +31,7 @@ class ForumsController < ApplicationController
   # GET /forums/1
   # GET /forums/1.xml
   def show
-    @forum = current_group.forums.find_by_permalink(params[:id])
+    @forum = Forum.find_by_permalink(params[:id]) or raise ActiveRecord::RecordNotFound
     (session[:forums] ||= {})[@forum.id] = Time.now.utc
     (session[:forums_page] ||= Hash.new(1))[@forum.id] = current_page if current_page > 1
 

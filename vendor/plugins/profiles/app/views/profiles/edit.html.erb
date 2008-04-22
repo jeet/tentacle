@@ -1,6 +1,7 @@
 <%= error_messages_for :page %>
 
 <% form_for(@profile, :url => {:controller => 'profiles', :action => 'update'}, :method => 'put') do |f| %>
+  <%= f.error_messages %>
 	<%= render :partial => "form", :locals => {:f => f} %>
 	
 	<%= submit_tag %>
