@@ -17,7 +17,6 @@ module Tentacle::Application::GroupMethods
   end
   
   def set_groups_sidebar
-    $stderr.puts "Set groups sidebar"
     @content_for_sidebar ||= ""
     @content_for_sidebar += "<p>Groups plugin installed. <a href='/groups'>Go to groups</a></p>"
   end

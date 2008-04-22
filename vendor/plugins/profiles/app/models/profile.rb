@@ -42,5 +42,7 @@ class Profile < ActiveRecord::Base
     def sanitize_email
       email.downcase!   unless email.blank?
     end
+
+
     
 end

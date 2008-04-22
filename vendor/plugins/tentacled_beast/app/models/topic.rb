@@ -74,7 +74,7 @@ protected
   end
   
   def set_default_attributes
-    self.group_id           = forum.group_id if forum_id
+    self.group_id        = forum.group_id if forum
     self.sticky          ||= 0
     self.last_updated_at ||= Time.now.utc
   end

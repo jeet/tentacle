@@ -6,18 +6,18 @@ class Profile
   #
   def post(forum, attributes)
     attributes.symbolize_keys!
-    Topic.new(attributes) do |topic|
-      topic.forum = forum
-      topic.profile  = self
+    topic = Topic.new(attributes) do |topic|
+      topic.forum   = forum
+      topic.profile = self
       revise_topic topic, attributes
     end
   end
 
   def reply(topic, body)
     returning topic.posts.build(:body => body) do |post|
-      post.group  = topic.group
-      post.forum = topic.forum
-      post.profile  = self
+      post.group   = topic.group
+      post.forum   = topic.forum
+      post.profile = self
       post.save
     end
   end

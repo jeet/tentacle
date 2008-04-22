@@ -14,7 +14,7 @@ class ProfilesController < ApplicationController
   end
   
   def update
-    @profile = current_user.profile
+    @profile = current_user.profile || current_user.build_profile
     
     respond_to do |format|
       if @profile.update_attributes(params[:profile])
@@ -34,11 +34,11 @@ class ProfilesController < ApplicationController
   private
     def get_profile
       if params[:id] == 'me'
-        @profile = current_user.profile
+        @profile = current_user.profile || current_user.build_profile
         @user = current_user
       else
         @user = User.find_by_login(params[:id])
-        @profile = @user.profile        
+        @profile = @user.profile || @user.build_profile
       end
     end
 end

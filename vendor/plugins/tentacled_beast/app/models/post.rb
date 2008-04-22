@@ -4,8 +4,7 @@ class Post < ActiveRecord::Base
   formats_attributes :body
 
   # author of post
-  belongs_to :profile #, :counter_cache => true
-  
+  belongs_to :profile, :counter_cache => true
   belongs_to :topic, :counter_cache => true
   
   # topic's forum (set by callback)

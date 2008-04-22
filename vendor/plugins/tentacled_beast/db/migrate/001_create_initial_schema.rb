@@ -85,7 +85,9 @@ class CreateInitialSchema < ActiveRecord::Migration
     #add_column :users, "last_login_at", :datetime 
     #add_column :users, "openid_url", :string   
     #add_column :users, "last_seen_at", :datetime 
+
     add_column :profiles, "posts_count", :integer, :default => 0
+
     #add_column :users, "display_name", :string
     #add_column :users, "permalink", :string
 
