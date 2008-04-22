@@ -5,7 +5,7 @@ class Profile < ActiveRecord::Base
   
   has_many :followers, :through => :follower_friends, :source => :requester
   has_many :followings, :through => :following_friends, :source => :requested
-  has_many :friends, :class_name => "Profile", :finder_sql => 'SELECT * FROM profiles WHERE id IN (SELECT profiles.id FROM profiles, friendships WHERE (friendships.requested_id = #{id}) OR (friendships.requester_id = #{id}) AND profiles.id <> #{id});'
+  has_many :friends, :class_name => "Profile", :finder_sql => 'SELECT * FROM profiles WHERE id IN (SELECT profiles.id FROM profiles, friendships WHERE (friendships.requested_id = #{id} OR friendships.requester_id = #{id}) AND profiles.id <> #{id} )'
   
   def request_friendship_with(user)
     Friendship.create(:requested_id => user.id, :requester_id => id, :approved => false)

@@ -40,9 +40,7 @@ class Profile
     return true if admin?
     member = Membership.join_from(forum.group, self) 
     return true if member && member.admin?
-    logger.warn "** moderator_of"
     return true if Moderatorship.exists?(:profile_id => id, :forum_id => forum.id)
-    logger.warn "** moderator END"
   end
 
   def display_name

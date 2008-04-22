@@ -8,6 +8,7 @@ resources :forums, :has_many => :posts do |forum|
   forum.resources :posts
 end
 
+resources :users
 resources :posts, :collection => {:search => :get}
 
 # resources :users, :member => { :suspend   => :put,

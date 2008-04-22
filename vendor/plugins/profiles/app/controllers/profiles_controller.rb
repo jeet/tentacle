@@ -4,7 +4,7 @@ class ProfilesController < ApplicationController
   
   def edit
     if params[:id] == 'me'
-      @profile = current_user.profile
+      @profile = current_user.profile || current_user.build_profile
       respond_to do |format|
         format.html
       end

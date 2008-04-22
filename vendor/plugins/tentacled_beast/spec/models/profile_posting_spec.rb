@@ -31,7 +31,7 @@ module TopicCreatePostHelper
     end
     
     base.it "increments cached group topics_count" do
-      @creating_topic.should change { groups(:default).reload.topics_count }.by(1)
+      @creating_topic.should change { groups(:default).reload.topics.count }.by(1)
     end
     
     base.it "increments cached forum topics_count" do
@@ -122,6 +122,7 @@ module TopicUpdatePostHelper
       @profile  = profiles(:default)
       @topic = topics(:default)
       @attributes = {:body => 'booya'}
+      Membership.stub!(:join_from) # no admin
     end
   end
   

@@ -71,28 +71,33 @@
               <li id="login-link"><%= link_to 'Login', '#' %></li>
             <% end -%>
           </ul>
-          </div>
-          <% unless logged_in? -%>
-            <% sheet_form_tag login_path, :id => 'openid-form', :trigger => false do |s| -%>
-              <h2>Login with OpenID (<%= link_to 'user/pass', '#', :id => 'login-toggle' %>)</h2>
-              <%= content_tag 'p', flash[:error] if flash[:error] %>
-              <%= s.text_field_tag %(OpenID: (<a href="#" id="reset-from-openid">reset</a>)), :openid_url, params[:openid_url], :class => 'big' %>
-              <%  s.submit 'login.png' %>
-            <% end -%>
-
-            <% sheet_form_tag login_path, :id => 'login-form', :trigger => false do |s| -%>
-              <h2>Login (<%= link_to 'OpenID', '#', :id => 'openid-toggle' %>)</h2>
-              <%= content_tag 'p', flash[:error] if flash[:error] %>
-              <%= s.text_field_tag     %(Login:),    :login,    params[:login], :class => 'big' %>
-              <%= s.password_field_tag %(Password:), :password, params[:password], :class => 'big' %>
-              <%  s.submit 'login.png' %>
-            <% end -%>
-          <% end %>
-          <% sheet_form_tag forget_path, :id => 'reset-form', :trigger => false do |s| %>
-            <h2>Reset your OpenID</h2>
-            <%= s.text_field_tag %(Email you signed up with: #{'(<a href="#" id="cancel-reset">login</a>)' unless logged_in?}), :email, '', :class => 'big' %>
-          <% end %>
         </div>
+        <% unless logged_in? -%>
+          <% sheet_form_tag login_path, :id => 'openid-form', :trigger => false do |s| -%>
+            <h2>Login with OpenID (<%= link_to 'user/pass', '#', :id => 'login-toggle' %>)</h2>
+            <%= content_tag 'p', flash[:error] if flash[:error] %>
+            <%= s.text_field_tag %(OpenID: (<a href="#" id="reset-from-openid">reset</a>)), :openid_url, params[:openid_url], :class => 'big' %>
+            <%  s.submit 'login.png' %>
+          <% end -%>
+
+          <% sheet_form_tag login_path, :id => 'login-form', :trigger => false do |s| -%>
+            <h2>Login (<%= link_to 'OpenID', '#', :id => 'openid-toggle' %>)</h2>
+            <%= content_tag 'p', flash[:error] if flash[:error] %>
+            <%= s.text_field_tag     %(Login:),    :login,    params[:login], :class => 'big' %>
+            <%= s.password_field_tag %(Password:), :password, params[:password], :class => 'big' %>
+            <%  s.submit 'login.png' %>
+          <% end -%>
+        <% end %>
+        <% sheet_form_tag forget_path, :id => 'reset-form', :trigger => false do |s| %>
+          <h2>Reset your OpenID</h2>
+          <%= s.text_field_tag %(Email you signed up with: #{'(<a href="#" id="cancel-reset">login</a>)' unless logged_in?}), :email, '', :class => 'big' %>
+        <% end %>
+
+        <div id="tabs">
+        <%= yield :tabs %>
+        </div>
+
+      </div>
       <!-- /header -->
       <!-- content -->
       <div id="content" class="clearfix">
