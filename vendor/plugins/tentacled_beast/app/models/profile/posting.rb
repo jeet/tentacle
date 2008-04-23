@@ -8,7 +8,7 @@ class Profile
     attributes.symbolize_keys!
     topic = Topic.new(attributes) do |topic|
       topic.forum   = forum
-      topic.profile = self
+      topic.profile_id = id
       revise_topic topic, attributes
     end
   end
@@ -17,7 +17,7 @@ class Profile
     returning topic.posts.build(:body => body) do |post|
       post.group   = topic.group
       post.forum   = topic.forum
-      post.profile = self
+      post.profile_id = id
       post.save
     end
   end
