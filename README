@@ -1,16 +1,26 @@
-# quickie install directions
-cp config/database.sample.yml config/database.yml
-mkdir log 
-rake tmp:create
-rake db:schema:load
+= Tentacle: The platform for social websites on Rails
 
 
-rake db:migrate:all
-rake db:migrate:plugin[groups]
-rake db:migrate:plugin[profiles]
-rake db:migrate:plugin[tentacled_beast]
 
-rake db:fixtures:load
+== Installing Tentacle
 
-script/runner "User.find(1).create_profile :email => 'test@test.com'"
-script/runner "Group.create :name => 'Default'"
+    TODO: Automate most of this crap
+    
+To install Tentacle, you'll need to first setup your database configuration and application structure:
+
+    cp config/database.sample.yml config/database.yml
+    mkdir log 
+    rake tmp:create
+    rake db:schema:load
+    rake db:migrate:all
+
+To install a plugin, you'll need to do the following:
+
+    script/tentacle install plugin_source
+    rake db:migrate:plugin[plugin_name]
+
+To seed some data in, you'll need to do the following:
+
+    rake db:fixtures:load
+    script/runner "User.find(1).create_profile :email => 'test@test.com'"
+    script/runner "Group.create :name => 'Default'"
