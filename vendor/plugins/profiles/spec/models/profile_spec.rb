@@ -42,3 +42,10 @@ describe Profile do
     profile.should_not be_valid
   end
 end
+
+describe "A new user" do
+  it "should have a profile created along with it" do
+    new_user = User.create!(:login => "profile_testing_dude", :password => 'dude')
+    new_user.profile.should_not be_nil
+  end
+end
