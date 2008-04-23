@@ -5,6 +5,16 @@ Dependencies.load_once_paths.delete File.dirname(__FILE__)
 
 require File.dirname(__FILE__) + "/app/models/profile"
 
+module UserMethods
+  def setup_profile
+    Profile.create!(:first_name => 'Your', :last_name => 'Name', :user_id => id, :email => (login || 'you') + '@' + (identity_url || 'example.com'))
+  end
+end
+
+User.has_one :profile
+User.after_create :setup_profile
+User.send(:include, UserMethods)
+
 module Tentacle::Application::ProfileMethods
   
   def self.included(base)
