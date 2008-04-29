@@ -14,8 +14,7 @@ class PrivateMessage < ActiveRecord::Base
   end
   
   def viewable_by?(profile)
-    raise (sender?(profile) && !self.sender_deleted?).inspect
-    (recipient?(profile) && !self.recipient_deleted?))
+    ((sender?(profile) && !self.sender_deleted?) || (recipient?(profile) && !self.recipient_deleted?))
   end
 
   def delete_by!(profile)

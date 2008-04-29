@@ -6,6 +6,12 @@ class PrivateMessagesController < ApplicationController
     @private_messages = PrivateMessage.paginate(:page => params[:page], :order => 'created_at DESC')
   end
   
+  def new
+    redirect_to private_messages_path unless params[:to] && User.find_by_login(params[:to])
+    
+    @private_message = PrivateMessage.new
+  end
+  
   def create
     @private_message = current_profile.private_messages_sent.build(params[:private_message])
     @private_message.recipient_id = params[:private_message][:recipient_id]

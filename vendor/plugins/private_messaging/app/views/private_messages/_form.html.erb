@@ -1,0 +1,38 @@
+<% form_for :private_message, :url => private_messages_path do |f| -%>
+<%= f.hidden_field :recipient_id %>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+    <td width="70%">
+      <label for="title">Title</label>
+      <%= f.text_field :title, :class => 'primary' %>
+    </td>
+  </tr>
+  <tr>
+    <td rowspan="2" width="70%">
+      <label for="body">Body</label><br />
+      <%= f.text_area :body, :rows => 8 %>
+    </td>
+    <td valign="top">
+
+
+      <h5><%= 'Formatting Help'[] %></h5>
+
+      <ul class="help">
+        <li><%= '*bold*'[:formatting_bold] %>
+        &nbsp; &nbsp; &nbsp;
+        <%= '_italics_'[:formatting_italics] %>
+        &nbsp; &nbsp; &nbsp;<br />
+        <%= 'bq. <span>(quotes)</span>'[:formatting_blockquote] %></li>
+        <li>"IBM":http://www.ibm.com</li>
+        <li><%= '* or # <span>(lists)</span>'[:formatting_list] %></li>
+      </ul>
+
+    </td>
+  </tr>
+  <tr>
+    <td valign="bottom" style="padding-bottom:15px;">
+     <%= submit_tag "Send Private Message"[] %><span class="button_or">or <%= link_to_function 'cancel'[], "$('private-message').hide()" %></span>
+   </td>
+ </tr>
+</table>
+<% end -%>
