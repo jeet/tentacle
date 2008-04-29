@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe PrivateMessagesController do
-  fixtures :users, :profiles, :private_messages
+  define_models
   integrate_views
   
   before do
@@ -25,11 +25,9 @@ describe PrivateMessagesController do
   end
   
   it "should let me see my messages" do
-    require 'pp'
-    pp users(:rick).profile.private_messages
     get :index
     
-    assigns[:private_messages].should == users(:rick).private_messages
+    assigns[:private_messages].should == users(:rick).profile.private_messages
   end
   
   it "should not let me see a message to another user" do
