@@ -25,6 +25,42 @@ describe PrivateMessage do
       message.should_not be_valid
     end
   end
+  
+  it "should tell me if a profile is the recipient" do
+  end
+  
+  it "should tell me if a profile is the sender" do
+  end
+  
+  it "should tell me if a profile can edit this message" do
+  end
+  
+  it "should tell me if a profile can see a message" do
+  end
+  
+  it "should delete a message on the sender side" do
+  end
+  
+  it "should delete a message on the recipient side" do
+  end
+  
+  it "should destroy a message if both sender and receiver delete it" do
+  end
+  
+  it "should find messages associated with a profile (e.g., either sender or recipient)" do
+  end
+  
+  it "should count messages associated with a profile" do
+  end
+  
+  it "should find messages between two profiles" do
+  end
+  
+  it "should count messages between two profiles" do
+  end
+  
+  it "should format its body with Textile" do
+  end
 end
 
 def create_message(options = {})
