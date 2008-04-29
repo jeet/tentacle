@@ -16,7 +16,7 @@
     <td class="author vcard">
       <div class="date">
         <a href="#<%= dom_id message %>" rel="bookmark">
-        <abbr class="updated" title="<%= message.created_at.xmlschema %>">
+        <abbr class="updated" title="<%= message.created_at %>">
         <%= time_ago_in_words(message.created_at) %>
         </abbr>
         </a>

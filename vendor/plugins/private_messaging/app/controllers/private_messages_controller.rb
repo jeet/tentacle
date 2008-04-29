@@ -3,7 +3,7 @@ class PrivateMessagesController < ApplicationController
   before_filter :login_required
   
   def index
-    @private_messages = PrivateMessage.paginate(:page => params[:page], :order => 'created_at DESC')
+    @private_messages = current_profile.private_messages.paginate(:page => params[:page], :order => 'created_at DESC')
   end
   
   def new

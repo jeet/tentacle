@@ -13,12 +13,13 @@ ModelStubbing.define_models do
   
   model Profile do
     stub :user => all_stubs(:user), :first_name => "Addy", :last_name => "McAdmin", :website => "This one", :about => "o hai.", :email => "emailzz@zz.com", :permalink => "un-deet"
-    stub :rick, :user => all_stubs(:rick), :first_name => "Rick", :last_name => "Olson", :website => "This one", :about => "o hai.", :email => "emailer@rick.com", :permalink => "un-deet"
-    stub :virginia, :user => all_stubs(:virginia), :first_name => "Virginia", :last_name => "LeBruege", :website => "This one", :about => "o hai.", :email => "virgie@brown.com", :permalink => "un-deet"
+    stub :rick, :user => all_stubs(:rick_user), :first_name => "Rick", :last_name => "Olson", :website => "This one", :about => "o hai.", :email => "emailer@rick.com", :permalink => "un-deet"
+    stub :virginia, :user => all_stubs(:virginia_user), :first_name => "Virginia", :last_name => "LeBruege", :website => "This one", :about => "o hai.", :email => "virgie@brown.com", :permalink => "un-deet"
   end
   
   model PrivateMessage do
-    stub :sender => all_stubs(:virginia_profile), :recipient => all_stubs(:rick_profile), :title => "Hello", :body => "Well, hello.", :sender_deleted => false, :recipient_deleted => false
+    stub :sender => all_stubs(:virginia_profile), :recipient => all_stubs(:rick_profile), :title => "Hello", :body => "Well, hello.", :sender_deleted => false, :recipient_deleted => false, :created_at => Time.now
+    stub :other_people, :sender => all_stubs(:profile), :recipient => all_stubs(:virginia_profile), :title => "Re: Hello"
     stub :other, :sender => all_stubs(:rick_profile), :recipient => all_stubs(:virginia_profile), :title => "Re: Hello"
     stub :sender_deleted, :sender_deleted => true
     stub :recipient_deleted, :recipient_deleted => true
