@@ -20,7 +20,7 @@ class PrivateMessagesController < ApplicationController
     end
     
     respond_to do |format|
-      format.html { redirect_to profile_path(@private_message.recipient_id) }
+      format.html { redirect_to private_messages_path }
     end
   end
 
@@ -34,12 +34,12 @@ class PrivateMessagesController < ApplicationController
   end
 
   def destroy
-    recipient_id = @private_message.recipient_id
     @private_message.delete_by! current_profile
+
     flash[:notice] = "Private message '{title}' was deleted."[:private_message_deleted_message, @private_message.title]
     respond_to do |format|
       format.html do
-        redirect_to profile_path(recipient_id)
+        redirect_to private_messages_path
       end
       format.xml { head 200 }
     end

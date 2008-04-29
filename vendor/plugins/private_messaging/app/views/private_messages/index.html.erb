@@ -1,1 +1,3 @@
+<h1>Private Messages</h1>
+<p>You have <strong><%= current_profile.private_messages_count %></strong> message.</p>
 <%= render :partial => 'list', :locals => {:private_messages => @private_messages} %>

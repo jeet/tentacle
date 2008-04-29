@@ -12,10 +12,16 @@ class PrivateMessage < ActiveRecord::Base
   def editable_by?(profile)
     profile && (profile.id == sender_id)
   end
+  
+  def viewable_by?(profile)
+    raise (sender?(profile) && !self.sender_deleted?).inspect
+    (recipient?(profile) && !self.recipient_deleted?))
+  end
 
   def delete_by!(profile)
     self.sender_deleted = true if sender?(profile)
     self.recipient_deleted = true if recipient?(profile)
+
     if sender_deleted? && recipient_deleted?
       destroy
     else
