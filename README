@@ -1,4 +1,21 @@
-= Tentacle: The platform for social websites on Rails
+= Tentacle: A platform for social websites on Rails
+
+Tentacle is supposed a fairly simple application platform, on which you can build
+an application with social features.  These features exist as Engines (look in vendor/plugins)
+The engines are intended to be vertical slices of functionality, easily replaceable by the developer.
+
+Some existing engines ported to Tentacle include the popular Beast forum and Signal wiki.
+
+Please note that this software has not yet seen a 0.1 release.
+
+Tentacle is aimed at expert-level Rails developers and is unsupported at this time.
+
+== Known Bugs
+
+Are you kidding me?
+
+OK, here's one: the app only runs in production mode, because we still haven't figured out how to monkey
+patch models to work with Rails' plugin reloading.
 
 
 
