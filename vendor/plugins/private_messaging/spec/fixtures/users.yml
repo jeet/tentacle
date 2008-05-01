@@ -1,0 +1,17 @@
+rick:
+  id: 1
+  login: rick
+  admin: true
+  token: ricktoken
+justin:
+  id: 2
+  login: justin
+  token: justintoken
+virginia:
+  id: 3
+  login: virginia
+  token: virginiatoken
+dude:
+  id: 4
+  login: dude
+  token: dudetoken

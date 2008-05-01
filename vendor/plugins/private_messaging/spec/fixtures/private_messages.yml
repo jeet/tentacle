@@ -1,0 +1,33 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+from_rick:
+  sender_id: 1
+  recipient_id: 2
+  title: o hai
+  body: hello *dude*
+  sender_deleted: false
+  recipient_deleted: false
+
+to_rick:
+  sender_id: 2
+  recipient_id: 1
+  title: hey there
+  body: hello *dude*
+  sender_deleted: false
+  recipient_deleted: false
+  
+recipient_deleted:
+  sender_id: 2
+  recipient_id: 1
+  title: hey there
+  body: hello *dude*
+  sender_deleted: false
+  recipient_deleted: true
+
+sender_deleted:
+  sender_id: 2
+  recipient_id: 1
+  title: hey there
+  body: hello *dude*
+  sender_deleted: true
+  recipient_deleted: false
