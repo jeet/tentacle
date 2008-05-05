@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   before_filter :require_login, :except => [:index, :show, :revision, :search]
   before_filter :login_required, :only => [:destroy]
-  before_filter :require_admin, :only => [:lock]
+  before_filter :admin_required, :only => [:lock]
   before_filter :check_private, :only => [:show, :revision]
   caches_page :show
   cache_sweeper :page_sweeper, :only => [:create, :update]

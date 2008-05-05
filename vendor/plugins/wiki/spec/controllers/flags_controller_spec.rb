@@ -10,21 +10,20 @@ describe FlagsController, "a user not logged in" do
   end
   
   %w[index new].each do |action|
-     it "#{action} should redirect to login" do
+     it "#{action} should deny access" do
        get action
-       response.should redirect_to('session/new')
+       assigns[:message].should == "You must be logged to access this page."
      end
    end
 
   it 'can not flag something' do
     post :create, :flag => { :flaggable_type => 'Page', :flaggable_id => 1, :reason => 'outdated' }
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
   
   it 'can not delete' do
     delete :destroy, :id => "1"
-    response.should_not be_success
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
 end
 
@@ -44,7 +43,7 @@ describe FlagsController, "a user logged in as normal user" do
   
   it "does not render 'index'" do
     get :index
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be an administrator to visit this page."
   end
   
   it 'canflag something' do

@@ -37,10 +37,9 @@ describe PagesController, " with group that requires login, a user not logged in
     page.save!
 
     get :show, :id => page.permalink
-    response.should_not be_success
-    response.should redirect_to("session/new")      
-    
+    assigns[:message].should == "You must be logged to access this page."    
   end
+  
   it "redirect to page/new (and it will in turn redirect to session/new) if showing a page that does not exist" do
     get :show, :id => "unavailable"
     response.should redirect_to("pages/new")      
@@ -48,7 +47,7 @@ describe PagesController, " with group that requires login, a user not logged in
   
   it "does not render 'new'" do
     get :new
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
   
   it "does not render 'diff'" do
@@ -57,19 +56,19 @@ describe PagesController, " with group that requires login, a user not logged in
     page.save!
 
     get :diff, :id => page.permalink, :v1 => page.version, :v2 => page.version - 1
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
   
   it "does not render 'revisions'" do
     page = create_page
     get :revisions, :id => page.permalink
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
 
   it "does not render 'edit'" do
     page = create_page
     get :edit, :id => page.permalink
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
 
   it "renders 'revision'" do
@@ -89,7 +88,7 @@ describe PagesController, " with group that requires login, a user not logged in
   
   it "can not lock a page" do
     get :lock, :id => 'hai'
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
   end
   
   it "can not rollback a page" do
@@ -99,7 +98,7 @@ describe PagesController, " with group that requires login, a user not logged in
     current_version = page.version
 
     get :rollback, :id => page.permalink, :version => 1
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
     
     page = page.reload
     page.version.should be == current_version
@@ -110,23 +109,23 @@ describe PagesController, " with group that requires login, a user not logged in
     
     lambda do
       post :update, :id => page.permalink, :page => {:body => "hehehe"}
-      response.should redirect_to('session/new')
+      assigns[:message].should == "You must be logged to access this page."
     end.should_not change(page, :body)
   end
   
   it "can not create a page" do
     lambda do
       post :create, :page => { :group_id => 1, :title => "o hai", :body => "meeg000!!" }
-      response.should redirect_to('session/new')
+      assigns[:message].should == "You must be logged to access this page."
     end.should_not change(Page, :count)
   end
-   it "can not delete a page" do
+  
+  it "can not delete a page" do
     page = create_delete_page
     
     lambda do
     delete :destroy, :id => page.permalink
-    response.should_not be_success
-    response.should redirect_to('session/new')
+    assigns[:message].should == "You must be logged to access this page."
     end.should_not change(Page, :count)
   end
 end
@@ -205,7 +204,7 @@ describe PagesController, " with group that does not require login, a user not l
     current_version = page.version
 
     get :rollback, :id => page.permalink, :version => 1
-    response.should redirect_to(page.permalink)
+    response.should redirect_to("wiki/#{page.permalink}")
     
     page = page.reload
     page.version.should be < current_version
@@ -216,7 +215,7 @@ describe PagesController, " with group that does not require login, a user not l
     
     lambda do
       post :update, :id => page.permalink, :page => {:body => "hehehe"}
-      response.should redirect_to(page.permalink)
+      response.should redirect_to("wiki/#{page.permalink}")
       page.reload
     end.should change(page, :body)
   end
@@ -224,7 +223,7 @@ describe PagesController, " with group that does not require login, a user not l
   it "can create a page" do
     lambda do
       post :create, :page => { :group_id => 1, :title => "o hai", :body => "meeg000!!" }
-      response.should redirect_to('o-hai')
+      response.should redirect_to('wiki/o-hai')
     end.should change(Page, :count)
   end
   
@@ -232,8 +231,7 @@ describe PagesController, " with group that does not require login, a user not l
     page = create_delete_page
     lambda do
       delete :destroy, :id => page.permalink
-      response.should_not be_success
-      response.should redirect_to('session/new')
+      assigns[:message].should == "You must be logged to access this page."
     end.should_not change(Page, :count)
   end
 
@@ -324,7 +322,7 @@ describe PagesController, "a user logged in as normal user" do
     
     lambda do
       post :update, :id => page.permalink, :page => {:body => "hehehe"}
-      response.should redirect_to(page.permalink)
+      response.should redirect_to("wiki/#{page.permalink}")
       page = page.reload
     end.should change(page, :body)
   end
@@ -332,7 +330,7 @@ describe PagesController, "a user logged in as normal user" do
   it "can create a page" do
     lambda do
       post :create, :page => { :group_id => 1, :title => "o hai", :body => "meeg000!!" }
-      response.should redirect_to('o-hai')
+      response.should redirect_to('wiki/o-hai')
     end.should change(Page, :count)
   end
 
@@ -343,7 +341,7 @@ describe PagesController, "a user logged in as normal user" do
     current_version = page.version
 
     get :rollback, :id => page.permalink, :version => 1
-    response.should redirect_to(page.permalink)
+    response.should redirect_to("wiki/#{page.permalink}")
     
     page = page.reload
     page.version.should be < current_version
@@ -351,8 +349,9 @@ describe PagesController, "a user logged in as normal user" do
 
   it "can not lock a page" do
     get :lock, :id => 'hai'
-    response.should redirect_to('login')
+    assigns[:message].should == "You must be an administrator to visit this page."
   end
+  
   it "can delete a page" do
     page = create_delete_page
     page.title = "to be delete"
@@ -447,7 +446,7 @@ describe PagesController, "a user logged in as admin" do
     
     lambda do
       post :update, :id => page.permalink, :page => {:body => "hehehe"}
-      response.should redirect_to(page.permalink)
+      response.should redirect_to("wiki/#{page.permalink}")
       page = page.reload
     end.should change(page, :body)
   end
@@ -455,7 +454,7 @@ describe PagesController, "a user logged in as admin" do
   it "can create a page" do
     lambda do
       post :create, :page => { :group_id => 1, :title => "o hai", :body => "meeg000!!" }
-      response.should redirect_to('o-hai')
+      response.should redirect_to('wiki/o-hai')
     end.should change(Page, :count)
   end
 
@@ -466,7 +465,7 @@ describe PagesController, "a user logged in as admin" do
     current_version = page.version
 
     get :rollback, :id => page.permalink, :version => 1
-    response.should redirect_to(page.permalink)
+    response.should redirect_to("wiki/#{page.permalink}")
     
     page = page.reload
     page.version.should be < current_version
@@ -474,7 +473,7 @@ describe PagesController, "a user logged in as admin" do
 
   it "can lock a page" do
     get :lock, :id => 'hai'
-    response.should redirect_to('hai')
+    response.should redirect_to('wiki/hai')
   end
   
   it "can unlock a page" do

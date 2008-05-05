@@ -12,7 +12,7 @@ Group.has_many :pages
 Profile.can_flag
 Profile.has_many :pages, :order => 'title ASC'
 
-module Tentacle::Application::ForumMethods
+module Tentacle::Application::WikiMethods
   def self.included(base)
     $stderr.puts "Wiki setup"
     base.before_filter :find_group
@@ -24,7 +24,7 @@ module Tentacle::Application::ForumMethods
     @group ||= Group.find(:first)
   end
   
-  def require_admin
-    redirect_to login_path unless current_user.admin?
-  end
+  # def require_admin
+  #   redirect_to login_path unless current_user.admin?
+  # end
 end
