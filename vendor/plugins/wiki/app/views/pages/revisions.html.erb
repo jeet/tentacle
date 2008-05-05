@@ -6,7 +6,7 @@
 	<li>
 		<%= link_to "#{rev.version}", revision_page_url(@page.permalink,:version =>rev.version) %> 
 			updated <%= time_ago_in_words(rev.updated_at) %> ago 
-			by <%= author(rev.user_id)  %>
+			by <%= author(rev.profile_id)  %>
 			<% if rev.respond_to?(:previous) && !rev.previous.nil? %>
 			<%= link_to "(Diff)", diff_page_url(@page.permalink, :v1 => rev.version, :v2 => rev.previous.version) %>
 			<% end %>

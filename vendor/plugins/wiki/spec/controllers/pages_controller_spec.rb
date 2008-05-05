@@ -7,11 +7,12 @@ def create_delete_page
   Page.create(:title => "to be delete", :body => "moop", :group_id => 1)
 end
 describe PagesController, " with group that requires login, a user not logged in" do
-  fixtures :groups, :pages, :page_versions, :users
+  fixtures :groups, :pages, :page_versions, :users, :profiles
   integrate_views
   before do
     controller.stub!(:logged_in?).and_return false
     controller.stub!(:current_user).and_return :false
+    controller.stub!(:current_profile).and_return nil
   end
   
   it "show all pages" do
@@ -131,7 +132,7 @@ describe PagesController, " with group that requires login, a user not logged in
 end
 
 describe PagesController, " with group that does not require login, a user not logged in" do
-  fixtures :groups, :pages, :page_versions, :users
+  fixtures :groups, :pages, :page_versions, :users, :profiles
   integrate_views
   before do
     group = Group.find(:first)
@@ -140,6 +141,7 @@ describe PagesController, " with group that does not require login, a user not l
 
     controller.stub!(:logged_in?).and_return false
     controller.stub!(:current_user).and_return :false
+    controller.stub!(:current_profile).and_return nil
   end
   
   it "show all pages" do
@@ -238,13 +240,14 @@ describe PagesController, " with group that does not require login, a user not l
 end
 
 describe PagesController, "a user logged in as normal user" do
-  fixtures :groups, :pages, :page_versions, :users
+  fixtures :groups, :pages, :page_versions, :users, :profiles
   integrate_views
   
   before do
     controller.stub!(:require_login)
     controller.stub!(:logged_in?).and_return true
     controller.stub!(:current_user).and_return users(:jeremy)
+    controller.stub!(:current_profile).and_return profiles(:jeremy_profile)
   end
   
   it "show all pages" do
@@ -348,7 +351,7 @@ describe PagesController, "a user logged in as normal user" do
 
   it "can not lock a page" do
     get :lock, :id => 'hai'
-    response.should redirect_to('pages/home')
+    response.should redirect_to('login')
   end
   it "can delete a page" do
     page = create_delete_page
@@ -362,12 +365,13 @@ describe PagesController, "a user logged in as normal user" do
 end
 
 describe PagesController, "a user logged in as admin" do
-  fixtures :groups, :pages, :page_versions, :users
+  fixtures :groups, :pages, :page_versions, :users, :profiles
   integrate_views
   before do
     controller.stub!(:require_login)
     controller.stub!(:logged_in?).and_return true
     controller.stub!(:current_user).and_return users(:admin)
+    controller.stub!(:current_profile).and_return profiles(:admin_profile)
   end
 
   it "show all pages" do

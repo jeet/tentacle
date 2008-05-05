@@ -1,5 +1,5 @@
 <ul class="meta_info">
-	<li><b>Author:</b> <%= author(version.user_id) %></li>
+	<li><b>Author:</b> <%= author(version.profile_id) %></li>
 	<li><b>Version:</b> <%= version.version %></li>
 	<li><%= link_to 'View all revisions', revisions_page_url(:id => page.permalink) %></li>
 	<li><%= link_to 'View previous revision', revision_page_url(:id => page.permalink, :version => version.previous.version) if version.previous %></li>

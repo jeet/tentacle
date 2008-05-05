@@ -5,3 +5,4 @@ jeremy:
 admin:
   id: 2
   login: admin
+  admin: true

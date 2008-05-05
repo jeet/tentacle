@@ -5,4 +5,5 @@ one:
   body: there
   group_id: 1
   version: 1
-  locked_at:
+  locked_at: 
+  profile_id: <%= Fixtures.identify :one %>

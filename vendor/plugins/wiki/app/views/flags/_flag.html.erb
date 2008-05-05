@@ -1,8 +1,8 @@
 <% if logged_in? %>
-<% if previous = current_user.flagged?(flag) %>
+<% if previous = current_profile.flagged?(flag) %>
   You flagged this <%=h previous.flaggable_type %> as <%=h previous.reason %> on <%=h previous.created_at %>
 <% else %>
-  <% form_for current_user.flags.build do |form| %>
+  <% form_for current_profile.flags.build do |form| %>
     <%= form.hidden_field :flaggable_type, :value => params[:flaggable_type] || flag.class.name %>
     <%= form.hidden_field :flaggable_id,   :value => params[:flaggable_id]   || flag.id %>
     <select name="flag[reason]">

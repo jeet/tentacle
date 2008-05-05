@@ -6,7 +6,7 @@ Dependencies.load_once_paths.delete File.dirname(__FILE__)
 
 Rails.service_data.wiki = { :akismet_key => "", :askismet_url => "" }
 
-require 'app/models/group'
+require File.dirname(__FILE__) + "/app/models/group"
 Group.has_many :pages
 
 Profile.can_flag
@@ -22,5 +22,9 @@ module Tentacle::Application::ForumMethods
   
   def find_group
     @group ||= Group.find(:first)
+  end
+  
+  def require_admin
+    redirect_to login_path unless current_user.admin?
   end
 end

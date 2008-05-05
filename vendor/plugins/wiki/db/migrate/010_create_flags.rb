@@ -1,10 +1,12 @@
 class CreateFlags < ActiveRecord::Migration
   def self.up
     create_table "flags", :force => true do |t|
-      t.integer :profile_id
       t.integer :flaggable_id
       t.string  :flaggable_type
-      t.integer :flaggable_profile_id
+      t.integer :owner_id
+      t.string :owner_type
+      t.integer :flagger_id
+      t.string  :flagger_type
       t.string  :reason
       t.timestamps
     end

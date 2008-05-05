@@ -2,11 +2,11 @@
 
 jeremy_profile:
   user_id: 1
-  first_name: Rick
-  last_name: Olson
+  first_name: Jeremy
+  last_name: McAnally
   website: http://www.entp.com
-  about: I'm Rick MF'ing Olson!
-  email: rick@thatplace.com
+  about: I'm all setup!
+  email: jeremy@thatplace.com
 
 admin_profile:
   user_id: 2
@@ -15,4 +15,3 @@ admin_profile:
   website: http://www.entp.com
   about: Whut?  d00d.  I don't know.
   email: admin@entp.com
-  admin: true

@@ -6,4 +6,4 @@ one_old:
   group_id: 1
   version: 1
   created_at: <%= 1.day.ago.to_s :db %>
-  page_id: <%= Fixtures.identify :one %>
+  profile_id: <%= Fixtures.identify :one %>

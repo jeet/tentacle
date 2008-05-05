@@ -3,10 +3,6 @@ class FlagsController < ApplicationController
   before_filter :login_required
 # You probably have your own 'admin' filter
   before_filter :admin_required, :only => :index
-protected
-  def admin_required
-    redirect_to new_session_path unless current_profile.admin?
-  end
 
 public
   
@@ -45,7 +41,6 @@ public
       object = klass.find params[:flaggable_id]
     
       respond_to do |format|
-        format.html {}
         format.js { render :partial => "flag.html.erb", :object => object }
       end
     else

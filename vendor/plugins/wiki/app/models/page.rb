@@ -26,7 +26,7 @@ class Page < ActiveRecord::Base
   attr_accessor :ip, :agent, :referrer
   acts_as_indexed :fields => [:title, :body, :author]
 
-  can_be_flagged :reasons => [:spam, :outdated, :inaccurate]
+  can_be_flagged :reasons => [:spam, :outdated, :inaccurate], :owner_key => :profile_id
   
   before_save :set_permalink
   # before_update :set_links
