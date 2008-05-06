@@ -49,7 +49,7 @@ describe FlagsController, "a user logged in as normal user" do
   it 'canflag something' do
     lambda {
       post :create, :flag => { :flaggable_type => 'Page', :flaggable_id => 1, :reason => 'outdated' }
-      response.should redirect_to('pages/hai')
+      response.should redirect_to('wiki/pages/hai')
     }.should change(Flag, :count).by(1)
   end
   it 'can not flag same page twice' do
@@ -104,7 +104,7 @@ describe FlagsController, "a user logged in as admin" do
   it 'can flag something' do
     lambda {
       post :create, :flag => { :flaggable_type => 'Page', :flaggable_id => 1, :reason => 'outdated' }
-      response.should redirect_to('pages/hai')
+      response.should redirect_to('wiki/pages/hai')
     }.should change(Flag, :count).by(1)
   end
   

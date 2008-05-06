@@ -13,7 +13,6 @@
 
 	<div id="header">
 		<div id="navbar">
-		  <%= render :partial => "shared/cacheable_navbar" %>
 		</div>
 		<h1><%= link_to "site.title", wiki_page_url("home"), :id => "site_name" %></h1>
 	</div><!-- end #header -->
@@ -34,7 +33,6 @@
 		</div><!-- end #main -->
 		
 		<div id="right">
-		  <%= yield :right %>
 		</div><!-- end #right -->
 		
 	</div><!-- end #container -->

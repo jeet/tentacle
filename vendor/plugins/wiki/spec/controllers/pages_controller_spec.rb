@@ -42,7 +42,7 @@ describe PagesController, " with group that requires login, a user not logged in
   
   it "redirect to page/new (and it will in turn redirect to session/new) if showing a page that does not exist" do
     get :show, :id => "unavailable"
-    response.should redirect_to("pages/new")      
+    response.should redirect_to("wiki/pages/new")      
   end
   
   it "does not render 'new'" do
@@ -161,7 +161,7 @@ describe PagesController, " with group that does not require login, a user not l
   
   it "shows new page if it does not exist" do
     get :show, :id => "unavailable"
-    response.should redirect_to("pages/new")      
+    response.should redirect_to("wiki/pages/new")      
   end
   
   it "renders 'new'" do
@@ -266,7 +266,7 @@ describe PagesController, "a user logged in as normal user" do
   
   it "shows new page if it does not exist" do
     get :show, :id => "unavailable"
-    response.should redirect_to("pages/new")      
+    response.should redirect_to("wiki/pages/new")      
   end
     
   it "renders 'new'" do
@@ -358,7 +358,7 @@ describe PagesController, "a user logged in as normal user" do
     page.save
     lambda do
       delete :destroy, :id => page.permalink
-      response.should redirect_to('pages')
+      response.should redirect_to('wiki/pages')
     end.should change(Page, :count)
   end
 end
@@ -391,7 +391,7 @@ describe PagesController, "a user logged in as admin" do
   
   it "shows new page if it does not exist" do
     get :show, :id => "unavailable"
-    response.should redirect_to("pages/new")      
+    response.should redirect_to("wiki/pages/new")      
   end
     
   it "renders 'new'" do
@@ -490,7 +490,7 @@ describe PagesController, "a user logged in as admin" do
     page.save
     lambda do
       delete :destroy, :id => page.permalink
-      response.should redirect_to('pages')
+      response.should redirect_to('wiki/pages')
     end.should change(Page, :count)
   end
 end

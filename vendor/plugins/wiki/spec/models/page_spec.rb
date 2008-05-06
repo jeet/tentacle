@@ -40,10 +40,7 @@ describe Page, "creating links" do
   end
   
   it "creates a link" do
-    c = Link.count
-    @page2.save!
-    Link.count.should == c+1
-    #lambda{ @page2.save! }.should change { Link.count }.by(1)
+    lambda{ @page2.save! }.should change(Link, :count).by(1)
   end
   
   it "creates a new empty wiki link" do

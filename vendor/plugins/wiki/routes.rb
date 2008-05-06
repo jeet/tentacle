@@ -1,6 +1,6 @@
 resources :flags
-resources :pages, :member => {:revision => :get, :rollback => :get, :lock => :get, :revisions => :get, :diff => :get}, :collection => {:search => :get}
-resources :attachments
+resources :pages, :path_prefix => 'wiki', :member => {:revision => :get, :rollback => :get, :lock => :get, :revisions => :get, :diff => :get}, :collection => {:search => :get}
+resources :attachments, :path_prefix => 'wiki'
 
 connect 'menus/:action', :controller => 'menus'
 

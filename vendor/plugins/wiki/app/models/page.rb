@@ -19,8 +19,8 @@
 class Page < ActiveRecord::Base
   belongs_to :profile
   belongs_to :group
-  has_many :inbound_links,  :class_name => "Link", :foreign_key => "to_page_id"
-  has_many :outbound_links, :class_name => "Link", :foreign_key => "from_page_id"
+  has_many :inbound_links,  :class_name => "Link", :foreign_key => "to_page_id", :dependent => :delete_all
+  has_many :outbound_links, :class_name => "Link", :foreign_key => "from_page_id", :dependent => :delete_all
   acts_as_versioned
   self.non_versioned_columns << 'locked_at'
   attr_accessor :ip, :agent, :referrer
@@ -62,11 +62,10 @@ class Page < ActiveRecord::Base
     
   def set_links
     Link.transaction do
-      # outbound_links.delete_all
       body.scan(/\[\[([^\]]*)\]\]/).each do |link|
         link = link[0].downcase.gsub(' ', '-')
         if page = group.pages.find_by_permalink(link)
-          Link.create! :from_page_id => id, :to_page_id => page.id
+          Link.find_or_create_by_from_page_id_and_to_page_id(:from_page_id => id, :to_page_id => page.id)
         else
           logger.warn "We couldn't find links for #{link}"
         end
