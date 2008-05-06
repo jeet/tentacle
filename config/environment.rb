@@ -9,10 +9,6 @@ require 'ostruct'
 # Specifies gem version of Rails to use when vendor/rails is not present
 RAILS_GEM_VERSION = '2.0.2' unless defined? RAILS_GEM_VERSION
 
-# Set this to :path to have URLs like http://my-tentacle.com/repo1/* instead of 
-# http://repo1.my-tentacle.com/*
-# USE_REPO_PATHS = true
-
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
 require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
@@ -24,7 +20,7 @@ Rails.plugin_routes = []
 # Configuration for external services like S3, Akismet, etc.
 Rails.mattr_accessor :service_data
 Rails.service_data = OpenStruct.new
-  
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here
   
@@ -67,7 +63,6 @@ Rails::Initializer.run do |config|
   
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory is automatically loaded
-  
   
   # Load Enginized models and all the other engine code we use.  Otherwise it won't load models
   # and other code won't reload.

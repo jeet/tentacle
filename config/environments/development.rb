@@ -16,3 +16,11 @@ config.action_view.debug_rjs                         = true
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
+
+# Engines doesn't load models more than once so the code mixing doesn't work.
+# This fixes that.
+config.after_initialize do
+  Dir.glob("#{RAILS_ROOT}/vendor/plugins/**/app/models/*.rb").each do |model_file|
+    load model_file
+  end
+end

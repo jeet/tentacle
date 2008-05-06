@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     end
 
     def login_required
-      logged_in? || access_denied_message("You must be logged in to edit a profile.")
+      logged_in? || access_denied_message("You must be logged to access this page.")
     end
 
     # handles non-html responses in DEV mode when there are exceptions
