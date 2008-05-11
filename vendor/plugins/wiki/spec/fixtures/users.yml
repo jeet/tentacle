@@ -1,0 +1,8 @@
+jeremy:
+  id: 1
+  login: jeremy
+
+admin:
+  id: 2
+  login: admin
+  admin: true

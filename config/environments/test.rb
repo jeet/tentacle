@@ -17,3 +17,11 @@ config.action_controller.perform_caching             = false
 # The :test delivery method accumulates sent emails in the
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
+
+# Engines doesn't load models more than once so the code mixing doesn't work.
+# This fixes that.
+config.after_initialize do
+  Dir.glob("#{RAILS_ROOT}/vendor/plugins/**/app/models/*.rb").each do |model_file|
+    load model_file
+  end
+end

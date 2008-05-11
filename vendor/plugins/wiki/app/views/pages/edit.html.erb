@@ -1,0 +1,15 @@
+<h1>Editing <%= @page.title %></h1>
+
+<%= error_messages_for :page %>
+
+<% form_for(@page) do |f| %>
+	<%= render :partial => "form", :locals => {:f => f} %>
+<% end %>
+
+<%= link_to 'Show', @page %> |
+<%= link_to 'Back', pages_path %>
+
+<div id="attachment_container">
+	<h2>Attachments</h2>
+<%= render :partial => @attachments %>
+</div>

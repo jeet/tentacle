@@ -18,6 +18,19 @@ ActiveRecord::Schema.define(:version => 7) do
     t.datetime "updated_at"
   end
 
+  create_table "attachments", :force => true do |t|
+    t.integer  "size"
+    t.string   "content_type"
+    t.string   "filename"
+    t.integer  "height"
+    t.integer  "width"
+    t.integer  "parent_id"
+    t.string   "thumbnail"
+    t.integer  "page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "avatars", :force => true do |t|
     t.string  "content_type"
     t.string  "filename"
@@ -26,6 +39,18 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string  "thumbnail"
     t.integer "width"
     t.integer "height"
+  end
+
+  create_table "flags", :force => true do |t|
+    t.integer  "flaggable_id"
+    t.string   "flaggable_type"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.integer  "flagger_id"
+    t.string   "flagger_type"
+    t.string   "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "forums", :force => true do |t|
@@ -56,8 +81,19 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "topics_count", :default => 0
-    t.integer  "posts_count",  :default => 0
+    t.integer  "users_count",                 :default => 0
+    t.integer  "posts_count",                 :default => 0
+    t.integer  "topics_count"
+    t.boolean  "wiki_requires_approval",      :default => false
+    t.boolean  "wiki_requires_login_to_post", :default => true
+    t.boolean  "disable_wiki_teh",            :default => false
+  end
+
+  create_table "links", :force => true do |t|
+    t.integer  "from_page_id"
+    t.integer  "to_page_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "memberships", :force => true do |t|
@@ -65,7 +101,6 @@ ActiveRecord::Schema.define(:version => 7) do
     t.integer  "profile_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "admin",      :default => false
   end
 
   create_table "moderatorships", :force => true do |t|
@@ -102,6 +137,32 @@ ActiveRecord::Schema.define(:version => 7) do
     t.binary "value"
   end
 
+  create_table "page_versions", :force => true do |t|
+    t.integer  "page_id"
+    t.integer  "version"
+    t.string   "title"
+    t.text     "body"
+    t.integer  "profile_id"
+    t.string   "permalink"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "private_page"
+    t.integer  "group_id"
+  end
+
+  create_table "pages", :force => true do |t|
+    t.string   "title"
+    t.text     "body"
+    t.integer  "profile_id"
+    t.string   "permalink"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean  "private_page"
+    t.integer  "version"
+    t.integer  "group_id"
+    t.datetime "locked_at"
+  end
+
   create_table "posts", :force => true do |t|
     t.integer  "profile_id"
     t.integer  "topic_id"
@@ -117,6 +178,21 @@ ActiveRecord::Schema.define(:version => 7) do
   add_index "posts", ["created_at", "forum_id"], :name => "index_posts_on_forum_id"
   add_index "posts", ["created_at", "profile_id"], :name => "index_posts_on_profile_id"
   add_index "posts", ["created_at", "topic_id"], :name => "index_posts_on_topic_id"
+
+  create_table "private_messages", :force => true do |t|
+    t.integer  "sender_id"
+    t.integer  "recipient_id"
+    t.string   "title"
+    t.text     "body"
+    t.text     "body_html"
+    t.boolean  "sender_deleted",    :default => false
+    t.boolean  "recipient_deleted", :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "private_messages", ["sender_id"], :name => "index_private_messages_on_sender_id"
+  add_index "private_messages", ["recipient_id"], :name => "index_private_messages_on_recipient_id"
 
   create_table "profiles", :force => true do |t|
     t.integer  "user_id"

@@ -1,0 +1,9 @@
+one:
+  id: 1
+  title: hai
+  permalink: hai
+  body: there
+  group_id: 1
+  version: 1
+  locked_at: 
+  profile_id: <%= Fixtures.identify :one %>

@@ -3,7 +3,7 @@
 # In the development environment your application's code is reloaded on
 # every request.  This slows down response time but is perfect for development
 # since you don't have to restart the webserver when you make code changes.
-config.cache_classes = true
+config.cache_classes = false
 
 # Log error messages when you accidentally call methods on nil.
 config.whiny_nils = true
@@ -16,3 +16,11 @@ config.action_view.debug_rjs                         = true
 
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
+
+# Engines doesn't load models more than once so the code mixing doesn't work.
+# This fixes that.
+config.after_initialize do
+  Dir.glob("#{RAILS_ROOT}/vendor/plugins/**/app/models/*.rb").each do |model_file|
+    load model_file
+  end
+end

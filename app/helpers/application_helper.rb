@@ -8,69 +8,8 @@ module ApplicationHelper
     @use_login_form ||= !cookies['use_svn'].blank? && cookies['use_svn'].to_s == '1'
   end
   
-  def word_for_change(change)
-    case change.downcase
-      when 'a'  then  'Added'
-      when 'd'  then  'Deleted'
-      when 'm'  then  'Modified'
-      when 'mv' then  'Moved'
-      when 'cp' then  'Copied'
-      else return change
-    end
-  end
-  
   def nb_pad(s, num)
     s.to_s.ljust(num).gsub(' ', '&nbsp;')
-  end
-  
-if Object.const_defined?(:Uv)
-  def highlight_as(filename)
-    Uv.syntax_for_file(filename) || 'plain_text'
-  end
-  
-  def highlight_syntax_in(node, show_blame=false)
-    parsed = nil
-    benchmark "Highlighting #{node.path}" do
-      parsed = Uv.parse(node.content, "xhtml", highlight_as(node.path.split("/").last), true, Tentacle.source_highlight_theme)
-      parsed.gsub!(/<span class="line-numbers">(\s+\d+\s+)<\/span>/) do |s|
-        line_num = $1.to_i
-        line_len = node.blame.size.to_s.length
-        rev, username = node.blame[line_num]
-        %(<span class="line-numbers" id="n-#{line_num}"><span class="blame" title="#{username} modified this code in ##{rev}">#{link_to("#{nb_pad username, node.blame[:username_length]}", hosted_url(current_repository, :changeset, :id => rev))}&nbsp;</span><a href="#n-#{line_num}">#{nb_pad line_num, line_len}</a></span>)
-      end
-      parsed.gsub! /^<pre class="/, %(<pre id="source-code" class="#{'noblame ' unless show_blame})
-    end
-    parsed
-  end
-else
-  def highlight_as(filename)
-    case filename.split('.').last.downcase
-      when 'js', 'as'               then 'javascript'
-      when 'rb', 'rakefile', 'rake' then 'ruby'
-      when 'css'                    then 'css'
-      when 'rhtml', 'erb', 'html', 'xml', 'rxml', 'plist' then 'html'
-      else 'plain'
-    end
-  end
-  
-  def highlight_syntax_in(node, show_blame=false)
-    %(<pre class="viewsource">
-      <code class="#{highlight_as(node.path.split('/').last)}">#{h node.content}</code>
-    </pre>)
-  end
-  
-  def blame_for(node)
-    lines = node.content.split("\n")
-    lines.each_with_index do |line, i|
-      rev, username = node.blame[i+1]
-      line.replace "#{rev} #{username.ljust(node.blame[:username_length])} #{line}"
-    end
-    %(<pre><code>#{h lines.join("\n")}</code></pre>)
-  end
-end
-  
-  def modified?(flag)
-    flag.downcase == 'm'
   end
   
   def title(ttl)

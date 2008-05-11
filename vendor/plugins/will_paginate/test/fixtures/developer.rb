@@ -1,15 +1,13 @@
-class Developer < ActiveRecord::Base
-  has_and_belongs_to_many :projects
+class Developer < User
+  has_and_belongs_to_many :projects, :include => :topics, :order => 'projects.name'
 
-  def self.per_page
-    10
+  def self.with_poor_ones(&block)
+    with_scope :find => { :conditions => ['salary <= ?', 80000], :order => 'salary' } do
+      yield
+    end
   end
-end
 
-class DeVeLoPeR < ActiveRecord::Base
-  set_table_name "developers"
+  named_scope :poor, :conditions => ['salary <= ?', 80000], :order => 'salary'
 
-  def self.per_page
-    10
-  end
+  def self.per_page() 10 end
 end

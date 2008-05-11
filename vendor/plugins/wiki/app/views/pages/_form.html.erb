@@ -1,0 +1,22 @@
+  <p>
+    <label for="page_title">Page Title</label><br />
+    <%= f.text_field :title %>
+  </p>
+
+  <p>
+    <label for="body">Body</label><br />
+	  <%= body_input(f) %>
+  </p>
+
+  <p>
+	<label for="private_page">Make page private</label>
+    <%= f.check_box :private_page %>
+	
+  <p>
+	
+	<%= f.hidden_field :permalink %>
+	
+  <p>
+    <%= f.submit @button_text %>
+  </p>
+<%= textile_editor_initialize -%>

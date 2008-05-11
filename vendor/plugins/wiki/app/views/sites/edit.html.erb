@@ -1,0 +1,39 @@
+<h2>Site settings</h2>
+
+<%= error_messages_for :site %>
+
+<% form_for(@site, :url => site_path) do |f| %>
+  <p>
+    <label for="site_title">Site title</label><br />
+    <%= f.text_field :title %>
+  </p>
+
+  <p>
+    <label for="akismet_key">Akismet key</label><br />
+    <%= f.text_field :akismet_key %>
+  </p>
+
+  <p>
+    <label for="akismet url">Akismet url</label><br />
+    <%= f.text_field :akismet_url %>
+  </p>
+
+  <p>
+    <%= f.check_box :require_approval %> <b>Require approval</b>
+  </p>
+
+  <p>
+    <%= f.check_box :require_login_to_post %> <b>Require login to post</b>
+  </p>
+
+  <p>
+    <%= f.check_box :disable_teh %><b>Disable <abbr title="Textile Editor Helper">teh</abbr></b>
+  </p>
+
+  <p>
+    <%= f.submit "Save Changes" %>
+  </p>
+<% end %>
+
+<%= link_to "Expire all cached files", expire_cache_site_path %><br />
+<%= link_to "Mark all pages private", mark_all_private_site_path %>

@@ -1,0 +1,4 @@
+<h1>Private Messages</h1>
+<p>You have <strong><%= pluralize(current_profile.private_messages_count, "message") %></strong>.</p>
+
+<%= render :partial => 'list', :locals => {:private_messages => @private_messages} if current_profile.private_messages_count > 0 %>

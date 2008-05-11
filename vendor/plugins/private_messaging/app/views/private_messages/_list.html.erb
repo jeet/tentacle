@@ -1,0 +1,63 @@
+<%= will_paginate private_messages %>
+
+<a name="<%= dom_id private_messages.first %>" id="<%= dom_id private_messages.first %>">&nbsp;</a>
+<script><%= render :partial => 'profile_script' %></script>
+<table border="0" cellspacing="0" cellpadding="0" class="private_messages posts wide">
+<% for message in private_messages do %>
+  <% if message.viewable_by?(current_profile) %>
+  <% unless (message == private_messages.first) || (current_profile.private_messages_count == 1) %>
+    <tr class="spacer">
+      <td colspan="2">
+        <a name="<%= dom_id message %>" id="<%= dom_id message %>">&nbsp;</a>
+      </td>
+    </tr>
+  <% end %>
+  <tr class="post hentry" id="<%= dom_id message %>-row">
+    <td class="author vcard">
+      <div class="date">
+        <a href="#<%= dom_id message %>" rel="bookmark">
+        <abbr class="updated" title="<%= message.created_at %>">
+        <%= time_ago_in_words(message.created_at) %>
+        </abbr>
+        </a>
+      </div>
+
+      From: <span class="fn"><%= link_to truncate(h(message.sender.display_name), 15), profile_path(message.sender) %></span>
+      <% if message.sender.admin? %>
+      <span class="admin">
+        <%= 'Administator'[:administrator_title] %>
+      </span>
+      <% end %>
+
+      <div class="recipient">
+        To: <%= link_to truncate(h(message.recipient.display_name), 15), profile_path(message.recipient) %>
+        <% if message.recipient.admin? %>
+          <span class="admin">
+            <%= 'Administator'[:administrator_title] %>
+          </span>
+        <% end %>
+      </div>
+
+    </td>
+    <td class="body entry-content" id="post-body-<%= message.id %>">
+    	<h2><%= message.title %></h2>
+
+      <%= message.body_html %>
+
+      <p>
+  	  <% if current_profile.id == message.recipient.id -%>
+  	  <%= link_to_function 'Reply', "PrivateMessageForm.show(#{message.sender.id}, '#{escape_javascript(message.title)}')", :class => "utility" %> &mdash;
+        <% end -%>
+    
+        <%= link_to 'Delete'[], private_message_path(message), :class => "utility", :method => :delete,
+                 :confirm => 'Delete this message forever?'[:delete_private_message_conf] %>
+      </p>
+    </td>
+  </tr>
+  <tr>
+<% end %>
+<% end %>
+</table>
+       <%= render :partial => 'new_form' %>
+       
+<%= will_paginate private_messages %>

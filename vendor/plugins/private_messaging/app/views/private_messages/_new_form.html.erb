@@ -1,0 +1,8 @@
+<div id="private-message" class="editbox">
+<div class="container">
+  <%= content_tag 'p', h(flash[:bad_reply]), :class => 'notice' if flash[:bad_reply] %>
+  <%= render :partial => 'form' %>
+</div>
+</div>
+<%= javascript_tag "$('private-message').hide();"%>
+<%= javascript_tag(render(:partial => 'profile_script')) %>

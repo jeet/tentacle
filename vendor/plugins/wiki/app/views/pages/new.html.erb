@@ -1,0 +1,11 @@
+<h1>Adding <%= @page.title || "a new page" %></h1>
+
+<%= error_messages_for :page %>
+
+<% form_for(@page) do |f| %>
+	<%= render :partial => "form", :locals => {:f => f} %>
+<% end %>
+
+<%= link_to 'Back', :back %>
+
+<%= render :partial => @attachments %>

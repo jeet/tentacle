@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper'
 require 'pp'
 
 describe "A user that can friend" do
-  fixtures :users, :profiles, :friendships
+  fixtures :users, :profiles
   
   before(:each) do
     @rick = users(:rick)
@@ -12,7 +12,7 @@ describe "A user that can friend" do
   it "should create followings when a user requests a friendship" do
     lambda do
       @rick.profile.request_friendship_with @virginia.profile
-      @rick.profile.reload
+      @rick.profile.reload      
     end.should change(@rick.profile.followings, :count).by(1)
   end
   
